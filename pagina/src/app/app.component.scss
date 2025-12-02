@@ -1,0 +1,105 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Barra superior clara con tabs */
+.navbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__brand {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.navbar__tabs {
+  display: flex;
+  gap: 32px;
+}
+
+.tab {
+  position: relative;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+/* Línea negra debajo de la pestaña activa */
+.tab--active {
+  color: #111827;
+  font-weight: 500;
+}
+
+.tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: #111827;
+  border-radius: 999px;
+}
+
+.tab {
+  position: relative;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: none;
+  cursor: pointer;                       // <-- mano al pasar
+  transition: color 0.15s ease;
+}
+
+.tab:hover {
+  color: #111827;                        // <-- resalta en hover
+}
+
+
+/* Contenido y footer */
+.page {
+  flex: 1;
+  padding: 40px 64px 32px;
+  background: #f9fafb;
+
+}
+
+
+.footer {
+  text-align: center;
+  padding: 12px 0 20px;
+  font-size: 12px;
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .page {
+    padding: 24px 16px;
+  }
+
+  .navbar__tabs {
+    gap: 16px;
+    font-size: 13px;
+  }
+}

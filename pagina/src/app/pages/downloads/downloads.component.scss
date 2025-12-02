@@ -1,0 +1,117 @@
+.downloads-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Tarjeta principal */
+.downloads-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 24px 24px;
+  box-shadow: 0 0 0 1px #e5e7eb;
+}
+
+.downloads-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #111827;
+}
+
+.downloads-card__subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0 0 16px;
+}
+
+/* Secciones dentro de la tarjeta */
+.downloads-section + .downloads-section {
+  margin-top: 16px;
+}
+
+.downloads-section__title {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 2px;
+  color: #111827;
+}
+
+.downloads-section__subtitle {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 12px;
+}
+
+/* Fila de descarga */
+.download-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+.download-item:first-of-type {
+  border-top: none;
+}
+
+.download-item__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.download-item__info {
+  flex: 1;
+}
+
+.download-item__title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 2px;
+  color: #111827;
+}
+
+.download-item__desc {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Botones reutilizados */
+.btn {
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.btn--secondary {
+  background: #ffffff;
+  color: #111827;
+  border-color: #d1d5db;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .downloads-card {
+    padding: 16px 16px 20px;
+  }
+
+  .download-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    margin-top: 6px;
+  }
+}

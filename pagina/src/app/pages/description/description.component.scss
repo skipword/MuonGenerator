@@ -1,0 +1,48 @@
+.desc-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Tarjetas principales */
+.desc-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px 24px 24px;
+  box-shadow: 0 0 0 1px #e5e7eb;
+}
+
+.desc-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 12px;
+  color: #111827;
+}
+
+/* Bloques internos */
+.desc-block {
+  & + & {
+    margin-top: 14px;
+  }
+}
+
+.desc-block__subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #111827;
+}
+
+.desc-block__text {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .desc-card {
+    padding: 16px 16px 20px;
+  }
+}

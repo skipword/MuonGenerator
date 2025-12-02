@@ -1,0 +1,104 @@
+<section class="sim-layout">
+  <!-- Columna izquierda: formulario -->
+  <div class="sim-layout__left">
+    <h1 class="sim-title">Simulador de Flujo de Muones</h1>
+    <p class="sim-subtitle">
+      Ingrese los parámetros para generar la distribución del campo magnético
+    </p>
+
+    <form class="sim-form" (ngSubmit)="onGenerate()">
+      <div class="form-field">
+        <label for="latitud">Latitud (°)</label>
+        <input
+          id="latitud"
+          type="number"
+          placeholder="Ej: -34.603722"
+          [(ngModel)]="latitud"
+          name="latitud"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="longitud">Longitud (°)</label>
+        <input
+          id="longitud"
+          type="number"
+          placeholder="Ej: -58.381592"
+          [(ngModel)]="longitud"
+          name="longitud"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="altura">Altura (m s.n.m.)</label>
+        <input
+          id="altura"
+          type="number"
+          placeholder="Ej: 25"
+          [(ngModel)]="altura"
+          name="altura"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="modelo">Modelo</label>
+        <select
+          id="modelo"
+          [(ngModel)]="modelo"
+          name="modelo"
+        >
+          <option value="" disabled selected>Seleccionar modelo</option>
+          <option value="cnf">CNF (Flujo normalizante)</option>
+          <option value="wmm">otro</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn--primary">
+        Generar distribución
+      </button>
+    </form>
+  </div>
+
+  <!-- Columna derecha: resultados + descargas -->
+  <div class="sim-layout__right">
+    <div class="results-card">
+      <p>
+        Complete el formulario y haga clic en
+        <strong>"Generar distribución"</strong>
+        para ver los resultados
+      </p>
+    </div>
+
+    <section class="download-card">
+      <h2 class="download-title">Descargar resultados</h2>
+      <p class="download-subtitle">
+        Exporte los resultados de la simulación en diferentes formatos
+      </p>
+
+      <div class="form-field">
+        <label for="formato">Formato de archivo</label>
+        <select
+          id="formato"
+          [(ngModel)]="formato"
+          name="formato"
+        >
+          <option value="" disabled selected>Seleccionar formato</option>
+          <option value="csv">CSV</option>
+          <option value="shw">SHW</option>
+        </select>
+      </div>
+
+      <p class="download-hint">
+        Genere una distribución primero para descargar resultados
+      </p>
+
+      <button
+        type="button"
+        class="btn btn--secondary"
+        (click)="onDownload()"
+      >
+        Descargar
+      </button>
+    </section>
+  </div>
+</section>
