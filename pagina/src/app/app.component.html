@@ -8,8 +8,27 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <header class="navbar">
   <div class="navbar__left">
-    <!-- Aquí puedes poner un logo pequeño si quieres -->
-    <span class="navbar__brand">Simulador de Flujo de Muones</span>
+    <div class="navbar__logos">
+      <img
+        src="assets/logo_Lidera.png"
+        alt="Logo Halley"
+        class="navbar__logo"
+      />
+      <img
+        src="assets/logo_halley.png"
+        alt="Logo Lidera"
+        class="navbar__logo"
+      />
+      <img
+        src="assets/logo_Lago.png"
+        alt="Logo Lago"
+        class="navbar__logo2"
+      />
+    </div>
+
+    <span class="navbar__separator"></span>
+
+    <span class="navbar__brand">Generador global del flujo de muones</span>
   </div>
 
   <nav class="navbar__tabs">
@@ -31,6 +50,7 @@
     >
   </nav>
 </header>
+
 
 <main class="page">
   <router-outlet></router-outlet>

@@ -1,0 +1,8 @@
+{
+  "trial_id": "trial_15",
+  "hidden_features": 256,
+  "num_layers": 6,
+  "num_bins": 5,
+  "tail_bound": 6.0,
+  "note": "Train pipeline alineado a C\u00f3digo 2; val solo monitoreo; SOLO last_model"
+}

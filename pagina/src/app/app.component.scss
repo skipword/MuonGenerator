@@ -20,6 +20,31 @@
   align-items: center;
 }
 
+/* Grupo de logos */
+.navbar__logos {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.navbar__logo {
+  height: 50px;
+  width: auto;
+}
+.navbar__logo2 {
+  height: 80px;
+  width: auto;
+}
+
+.navbar__separator {
+  width: 2px;
+  height: 50px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  margin-right: 12px;
+  margin-left: 2px;
+}
+
 .navbar__brand {
   font-size: 14px;
   font-weight: 500;

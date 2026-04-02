@@ -1,0 +1,20 @@
+﻿# Python
+backend/.venv/
+**/__pycache__/
+*.pyc
+.env
+
+# Backend outputs
+backend/app/runs/*
+!backend/app/runs/.gitkeep
+
+# Frontend
+pagina/node_modules/
+pagina/dist/
+pagina/.angular/cache/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

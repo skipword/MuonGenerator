@@ -1,78 +1,109 @@
 <section class="sim-layout">
-  <!-- Columna izquierda: formulario -->
   <div class="sim-layout__left">
-    <h1 class="sim-title">Simulador de Flujo de Muones</h1>
+    <h1 class="sim-title">Generador global del flujo de muones</h1>
     <p class="sim-subtitle">
-      Ingrese los parámetros para generar la distribución del campo magnético
+      Ingrese los parametros para generar el espectro muonico
     </p>
 
     <form class="sim-form" (ngSubmit)="onGenerate()">
       <div class="form-field">
-        <label for="latitud">Latitud (°)</label>
+        <label for="bx">Bx (µT)</label>
         <input
-          id="latitud"
+          id="bx"
           type="number"
-          placeholder="Ej: -34.603722"
-          [(ngModel)]="latitud"
-          name="latitud"
+          placeholder="ej., 26.793"
+          [(ngModel)]="bx"
+          name="bx"
         />
       </div>
 
       <div class="form-field">
-        <label for="longitud">Longitud (°)</label>
+        <label for="bz">Bz (µT)</label>
         <input
-          id="longitud"
+          id="bz"
           type="number"
-          placeholder="Ej: -58.381592"
-          [(ngModel)]="longitud"
-          name="longitud"
+          placeholder="ej., 30.055"
+          [(ngModel)]="bz"
+          name="bz"
         />
       </div>
 
       <div class="form-field">
-        <label for="altura">Altura (m s.n.m.)</label>
+        <label for="altura">Altitude (m a.s.l.)</label>
         <input
           id="altura"
           type="number"
-          placeholder="Ej: 25"
+          placeholder="ej., 956"
           [(ngModel)]="altura"
           name="altura"
         />
+        <small class="field-hint">
+          Use the approximate altitude above sea level.
+        </small>
       </div>
 
-      <div class="form-field">
-        <label for="modelo">Modelo</label>
-        <select
-          id="modelo"
-          [(ngModel)]="modelo"
-          name="modelo"
-        >
-          <option value="" disabled selected>Seleccionar modelo</option>
-          <option value="cnf">CNF (Flujo normalizante)</option>
-          <option value="wmm">otro</option>
-        </select>
-      </div>
-
-      <button type="submit" class="btn btn--primary">
-        Generar distribución
+      <button
+        type="submit"
+        class="btn btn--primary"
+        [disabled]="!isFormValid || isSimulating"
+      >
+        {{ isSimulating ? 'Simulando...' : 'Generar espectro' }}
       </button>
     </form>
   </div>
 
-  <!-- Columna derecha: resultados + descargas -->
   <div class="sim-layout__right">
     <div class="results-card">
-      <p>
-        Complete el formulario y haga clic en
-        <strong>"Generar distribución"</strong>
-        para ver los resultados
-      </p>
+      <ng-container *ngIf="!isSimulating && !simulationDone">
+        <p>{{ mensajeResultado }}</p>
+      </ng-container>
+
+      <ng-container *ngIf="isSimulating">
+        <div class="spinner"></div>
+        <p>Simulación ejecutándose...</p>
+      </ng-container>
+
+      <ng-container *ngIf="!isSimulating && simulationDone">
+        <p class="results-text">{{ mensajeResultado }}</p>
+
+        <div class="results-viewer" *ngIf="resultImageUrls.length > 0">
+          <button
+            type="button"
+            class="viewer-arrow"
+            (click)="prevImage()"
+            [disabled]="currentImageIndex === 0"
+          >
+            ←
+          </button>
+
+          <div class="results-viewer__content">
+            <p class="results-image-label" *ngIf="currentImageLabel">
+              {{ currentImageLabel }}
+            </p>
+
+            <img
+              [src]="currentImageUrl"
+              alt="Simulation result"
+              class="results-image"
+            />
+          </div>
+
+          <button
+            type="button"
+            class="viewer-arrow"
+            (click)="nextImage()"
+            [disabled]="currentImageIndex === resultImageUrls.length - 1"
+          >
+            →
+          </button>
+        </div>
+      </ng-container>
     </div>
 
     <section class="download-card">
-      <h2 class="download-title">Descargar resultados</h2>
+      <h2 class="download-title">Descarga los resultados</h2>
       <p class="download-subtitle">
-        Exporte los resultados de la simulación en diferentes formatos
+        Exporta la simulación en diferentes formatos
       </p>
 
       <div class="form-field">
@@ -82,19 +113,20 @@
           [(ngModel)]="formato"
           name="formato"
         >
-          <option value="" disabled selected>Seleccionar formato</option>
+          <option value="" disabled>Selecciona un formato</option>
           <option value="csv">CSV</option>
           <option value="shw">SHW</option>
         </select>
       </div>
 
       <p class="download-hint">
-        Genere una distribución primero para descargar resultados
+        Selecciona el tipo de archivo a descargar.
       </p>
 
       <button
         type="button"
         class="btn btn--secondary"
+        [disabled]="!simulationDone || !formato"
         (click)="onDownload()"
       >
         Descargar

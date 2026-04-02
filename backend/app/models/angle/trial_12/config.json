@@ -1,0 +1,26 @@
+{
+  "trial_id": "trial_12",
+  "target": "mu = cos(theta_deg)",
+  "theta_col": "theta",
+  "mu_clip_eps": 1e-06,
+  "hidden_features": 256,
+  "num_layers": 7,
+  "num_bins": 5,
+  "tail_bound": 6.0,
+  "lr": 0.0003,
+  "epochs": 20,
+  "batch_size_train": 4096,
+  "batch_size_val": 8192,
+  "seed": 42,
+  "target_per_site_train": 200000,
+  "mu_bins_n": 100,
+  "context_cols": [
+    "h",
+    "bx",
+    "bz"
+  ],
+  "min_bin_width": 0.001,
+  "min_bin_height": 0.0001,
+  "min_derivative": 0.001,
+  "note": "Estilo energ\u00eda: cudnn deterministic=False, benchmark=False; seed reset por trial; val no altera RNG; SOLO last_model"
+}
