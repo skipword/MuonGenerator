@@ -2,16 +2,113 @@
   <div class="sim-layout__left">
     <h1 class="sim-title">Generador global del flujo de muones</h1>
     <p class="sim-subtitle">
-      Ingrese los parametros para generar el espectro muonico
+      Busque una ciudad para autocompletar latitud y longitud. La altura, Bx y Bz
+      pueden ajustarse manualmente antes de ejecutar la simulación.
     </p>
 
     <form class="sim-form" (ngSubmit)="onGenerate()">
+      <div class="form-field">
+        <label for="city">Ciudad</label>
+        <input
+          id="city"
+          type="text"
+          placeholder="ej., Bucaramanga"
+          [(ngModel)]="city"
+          name="city"
+          (keydown.enter)="onResolveCity(); $event.preventDefault()"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="country">País (opcional)</label>
+        <input
+          id="country"
+          type="text"
+          placeholder="ej., Colombia"
+          [(ngModel)]="country"
+          name="country"
+          (keydown.enter)="onResolveCity(); $event.preventDefault()"
+        />
+      </div>
+
+      <div class="action-row">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          [disabled]="!canResolveCity"
+          (click)="onResolveCity()"
+        >
+          {{ isResolvingCity ? 'Buscando...' : 'Buscar ciudad' }}
+        </button>
+      </div>
+
+      <p class="resolved-place" *ngIf="resolvedDisplayName">
+        <strong>Lugar encontrado:</strong> {{ resolvedDisplayName }}
+      </p>
+
+      <p class="field-hint">
+        {{ locationStatus }}
+      </p>
+
+      <div class="form-field">
+        <label for="lat">Latitud</label>
+        <input
+          id="lat"
+          type="number"
+          step="any"
+          placeholder="ej., 7.12539"
+          [(ngModel)]="lat"
+          name="lat"
+          (blur)="maybeRecomputeField()"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="lon">Longitud</label>
+        <input
+          id="lon"
+          type="number"
+          step="any"
+          placeholder="ej., -73.1198"
+          [(ngModel)]="lon"
+          name="lon"
+          (blur)="maybeRecomputeField()"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="altura">Altura (m s.n.m.)</label>
+        <input
+          id="altura"
+          type="number"
+          placeholder="ej., 956"
+          [(ngModel)]="altura"
+          name="altura"
+          (blur)="maybeRecomputeField()"
+        />
+        <small class="field-hint">
+          Puede usar una altura aproximada o ajustarla manualmente con un valor más específico.
+        </small>
+      </div>
+
+      <div class="action-row">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          [disabled]="!canComputeField"
+          (click)="onComputeField()"
+        >
+          {{ isComputingField ? 'Calculando...' : 'Actualizar Bx y Bz' }}
+        </button>
+      </div>
+
       <div class="form-field">
         <label for="bx">Bx (µT)</label>
         <input
           id="bx"
           type="number"
-          placeholder="ej., 26.793"
+          step="any"
+          placeholder="Se completa automáticamente"
           [(ngModel)]="bx"
           name="bx"
         />
@@ -22,30 +119,17 @@
         <input
           id="bz"
           type="number"
-          placeholder="ej., 30.055"
+          step="any"
+          placeholder="Se completa automáticamente"
           [(ngModel)]="bz"
           name="bz"
         />
       </div>
 
-      <div class="form-field">
-        <label for="altura">Altitude (m a.s.l.)</label>
-        <input
-          id="altura"
-          type="number"
-          placeholder="ej., 956"
-          [(ngModel)]="altura"
-          name="altura"
-        />
-        <small class="field-hint">
-          Use the approximate altitude above sea level.
-        </small>
-      </div>
-
       <button
         type="submit"
         class="btn btn--primary"
-        [disabled]="!isFormValid || isSimulating"
+        [disabled]="!isFormValid || isSimulating || isResolvingCity || isComputingField"
       >
         {{ isSimulating ? 'Simulando...' : 'Generar espectro' }}
       </button>
