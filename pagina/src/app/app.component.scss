@@ -4,70 +4,94 @@
   min-height: 100vh;
 }
 
-/* Barra superior clara con tabs */
 .navbar {
-  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.96);
   border-bottom: 1px solid #e5e7eb;
+  backdrop-filter: blur(10px);
+}
+
+.navbar__content {
+  max-width: 1280px;
+  margin: 0 auto;
   padding: 0 64px;
+  min-height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  gap: 20px;
 }
 
 .navbar__left {
+  min-width: 0;
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
-/* Grupo de logos */
 .navbar__logos {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
+  flex-shrink: 0;
 }
 
 .navbar__logo {
-  height: 50px;
+  height: 44px;
   width: auto;
+  display: block;
 }
+
 .navbar__logo2 {
-  height: 80px;
+  height: 60px;
   width: auto;
+  display: block;
 }
 
 .navbar__separator {
   width: 2px;
-  height: 50px;
+  height: 42px;
   background: #e5e7eb;
   border-radius: 999px;
-  margin-right: 12px;
-  margin-left: 2px;
+  flex-shrink: 0;
 }
 
 .navbar__brand {
+  min-width: 0;
   font-size: 14px;
-  font-weight: 500;
-  color: #4b5563;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.3;
 }
 
 .navbar__tabs {
   display: flex;
-  gap: 32px;
+  align-items: center;
+  gap: 28px;
+  flex-shrink: 0;
 }
 
 .tab {
   position: relative;
+  display: inline-flex;
+  align-items: center;
   padding: 8px 0;
   font-size: 14px;
   color: #6b7280;
   text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease;
 }
 
-/* Línea negra debajo de la pestaña activa */
+.tab:hover {
+  color: #111827;
+}
+
 .tab--active {
   color: #111827;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .tab--active::after {
@@ -81,50 +105,146 @@
   border-radius: 999px;
 }
 
-.tab {
-  position: relative;
-  padding: 8px 0;
-  font-size: 14px;
-  color: #6b7280;
-  text-decoration: none;
-  cursor: pointer;                       // <-- mano al pasar
-  transition: color 0.15s ease;
+.navbar__menu-button {
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  flex-shrink: 0;
 }
 
-.tab:hover {
-  color: #111827;                        // <-- resalta en hover
+.navbar__menu-button span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  margin: 4px auto;
+  border-radius: 999px;
+  background: #111827;
 }
 
-
-/* Contenido y footer */
 .page {
   flex: 1;
   padding: 40px 64px 32px;
   background: #f9fafb;
-
 }
-
 
 .footer {
   text-align: center;
-  padding: 12px 0 20px;
+  padding: 12px 16px 20px;
   font-size: 12px;
   color: #6b7280;
   background: #f9fafb;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .navbar {
-    padding: 0 16px;
-  }
-
+@media (max-width: 1100px) {
+  .navbar__content,
   .page {
-    padding: 24px 16px;
+    padding-left: 24px;
+    padding-right: 24px;
   }
 
   .navbar__tabs {
-    gap: 16px;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar__content {
+    position: relative;
+    align-items: center;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .navbar__left {
+    gap: 10px;
+    padding-right: 8px;
+  }
+
+  .navbar__logo {
+    height: 36px;
+  }
+
+  .navbar__logo2 {
+    height: 46px;
+  }
+
+  .navbar__separator {
+    height: 34px;
+  }
+
+  .navbar__brand {
     font-size: 13px;
+  }
+
+  .navbar__menu-button {
+    display: inline-block;
+  }
+
+  .navbar__tabs {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 24px;
+    right: 24px;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 8px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  }
+
+  .navbar__tabs--open {
+    display: flex;
+  }
+
+  .tab {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .tab--active {
+    background: #f3f4f6;
+  }
+
+  .tab--active::after {
+    display: none;
+  }
+
+  .page {
+    padding-top: 24px;
+    padding-bottom: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar__content,
+  .page {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .navbar__left {
+    align-items: flex-start;
+  }
+
+  .navbar__brand {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .navbar__tabs {
+    left: 16px;
+    right: 16px;
   }
 }

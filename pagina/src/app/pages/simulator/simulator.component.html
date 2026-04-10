@@ -151,15 +151,6 @@
         <p class="results-text">{{ mensajeResultado }}</p>
 
         <div class="results-viewer" *ngIf="resultImageUrls.length > 0">
-          <button
-            type="button"
-            class="viewer-arrow"
-            (click)="prevImage()"
-            [disabled]="currentImageIndex === 0"
-          >
-            ←
-          </button>
-
           <div class="results-viewer__content">
             <p class="results-image-label" *ngIf="currentImageLabel">
               {{ currentImageLabel }}
@@ -170,16 +161,34 @@
               alt="Simulation result"
               class="results-image"
             />
-          </div>
 
-          <button
-            type="button"
-            class="viewer-arrow"
-            (click)="nextImage()"
-            [disabled]="currentImageIndex === resultImageUrls.length - 1"
-          >
-            →
-          </button>
+            <div
+              class="results-viewer__controls"
+              *ngIf="resultImageUrls.length > 1"
+            >
+              <button
+                type="button"
+                class="viewer-arrow"
+                (click)="prevImage()"
+                [disabled]="currentImageIndex === 0"
+              >
+                ←
+              </button>
+
+              <span class="results-counter">
+                {{ currentImageIndex + 1 }} / {{ resultImageUrls.length }}
+              </span>
+
+              <button
+                type="button"
+                class="viewer-arrow"
+                (click)="nextImage()"
+                [disabled]="currentImageIndex === resultImageUrls.length - 1"
+              >
+                →
+              </button>
+            </div>
+          </div>
         </div>
       </ng-container>
     </div>

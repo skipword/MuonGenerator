@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { 
-  RouterOutlet, 
+import {
+  RouterOutlet,
   RouterLink,
   RouterLinkActive,
 } from '@angular/router';
@@ -14,4 +14,13 @@ import {
 })
 export class AppComponent {
   title = 'pagina';
+  menuOpen = false;
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+
+  closeMenu() {
+    this.menuOpen = false;
+  }
 }

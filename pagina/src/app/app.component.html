@@ -1,56 +1,81 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <header class="navbar">
-  <div class="navbar__left">
-    <div class="navbar__logos">
-      <img
-        src="assets/logo_Lidera.png"
-        alt="Logo Halley"
-        class="navbar__logo"
-      />
-      <img
-        src="assets/logo_halley.png"
-        alt="Logo Lidera"
-        class="navbar__logo"
-      />
-      <img
-        src="assets/logo_Lago.png"
-        alt="Logo Lago"
-        class="navbar__logo2"
-      />
+  <div class="navbar__content">
+    <div class="navbar__left">
+      <div class="navbar__logos">
+        <img
+          src="assets/logo_Lidera.png"
+          alt="Logo Lidera"
+          class="navbar__logo"
+        />
+        <img
+          src="assets/logo_halley.png"
+          alt="Logo Halley"
+          class="navbar__logo"
+        />
+        <img
+          src="assets/logo_Lago.png"
+          alt="Logo Lago"
+          class="navbar__logo2"
+        />
+      </div>
+
+      <span class="navbar__separator"></span>
+
+      <span class="navbar__brand">Generador global del flujo de muones</span>
     </div>
 
-    <span class="navbar__separator"></span>
+    <button
+      type="button"
+      class="navbar__menu-button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen"
+      aria-label="Abrir o cerrar menú de navegación"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
 
-    <span class="navbar__brand">Generador global del flujo de muones</span>
+    <nav class="navbar__tabs" [class.navbar__tabs--open]="menuOpen">
+      <a
+        routerLink="/"
+        routerLinkActive="tab--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="tab"
+        (click)="closeMenu()"
+      >
+        Inicio
+      </a>
+
+      <a
+        routerLink="/simulador"
+        routerLinkActive="tab--active"
+        class="tab"
+        (click)="closeMenu()"
+      >
+        Simulador
+      </a>
+
+      <a
+        routerLink="/descripcion"
+        routerLinkActive="tab--active"
+        class="tab"
+        (click)="closeMenu()"
+      >
+        Descripción
+      </a>
+
+      <a
+        routerLink="/descargas"
+        routerLinkActive="tab--active"
+        class="tab"
+        (click)="closeMenu()"
+      >
+        Descargas
+      </a>
+    </nav>
   </div>
-
-  <nav class="navbar__tabs">
-    <a
-      routerLink="/"
-      routerLinkActive="tab--active"
-      [routerLinkActiveOptions]="{ exact: true }"
-      class="tab"
-      >Inicio</a
-    >
-    <a routerLink="/simulador" routerLinkActive="tab--active" class="tab"
-      >Simulador</a
-    >
-    <a routerLink="/descripcion" routerLinkActive="tab--active" class="tab"
-      >Descripción</a
-    >
-    <a routerLink="/descargas" routerLinkActive="tab--active" class="tab"
-      >Descargas</a
-    >
-  </nav>
 </header>
-
 
 <main class="page">
   <router-outlet></router-outlet>
@@ -59,12 +84,3 @@
 <footer class="footer">
   © 2025 Todos los derechos reservados
 </footer>
-
-
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->

@@ -1,16 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
+  overflow-x: hidden;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     sans-serif;
   background: #f9fafb;
   color: #111827;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 .material-symbols-rounded {
@@ -19,9 +35,10 @@ body {
     'wght' 400,
     'GRAD' 0,
     'opsz' 24;
-  font-size: 22px; // puedes ajustar el tamaño
+  font-size: 22px;
   line-height: 1;
 }
+
 .btn--primary:hover {
   filter: brightness(1.05);
 }
