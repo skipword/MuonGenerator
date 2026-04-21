@@ -1,33 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, finalize } from 'rxjs';
 
-type CityResolveResponse = {
-  query: string;
-  display_name: string;
-  lat: number;
-  lon: number;
-};
-
-type BFieldResponse = {
-  lat: number;
-  lon: number;
-  altura: number;
-  bx: number;
-  bz: number;
-  computed_at_utc: string;
-  model: string;
-};
-
-type SimResponse = {
-  message: string;
-  image_urls: string[];
-  image_labels?: string[];
-  download_csv_url?: string;
-  download_shw_url?: string;
-  run_id?: string;
-  simulation_time_s?: number;
-};
+import {
+  BFieldResponse,
+  CityResolveResponse,
+  SimResponse,
+  SimulatorApiService,
+} from './simulator-api.service';
 
 export type DownloadFormat = '' | 'csv' | 'shw';
 
@@ -97,10 +76,6 @@ type PersistedSimulatorState = Pick<
 export class SimulatorStateService {
   private readonly STORAGE_KEY = 'simulator-state';
 
-  // Idealmente esto debería venir de environment.ts,
-  // pero lo dejo aquí para que puedas copiar y pegar solo estos 2 archivos.
-  private readonly API_BASE = 'http://localhost:8000';
-
   private readonly initialState: SimulatorState = {
     city: '',
     country: '',
@@ -145,7 +120,7 @@ export class SimulatorStateService {
 
   readonly state$ = this.stateSubject.asObservable();
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly simulatorApi: SimulatorApiService) {}
 
   get snapshot(): SimulatorState {
     return this.stateSubject.value;
@@ -177,15 +152,15 @@ export class SimulatorStateService {
       country: country.trim(),
     };
 
-    this.http
-      .post<CityResolveResponse>(`${this.API_BASE}/resolve-city`, payload)
+    this.simulatorApi
+      .resolveCity(payload)
       .pipe(
         finalize(() => {
           this.patchState({ isResolvingCity: false });
         })
       )
       .subscribe({
-        next: (res) => {
+        next: (res: CityResolveResponse) => {
           this.patchState({
             lat: res.lat,
             lon: res.lon,
@@ -206,9 +181,7 @@ export class SimulatorStateService {
               'Ciudad encontrada. Ahora ingrese o ajuste la altura y luego actualice Bx/Bz.',
           });
         },
-        error: (err) => {
-          console.error(err);
-
+        error: () => {
           this.patchState({
             resolvedDisplayName: '',
             locationStatus: 'No se pudo encontrar la ciudad indicada.',
@@ -220,12 +193,7 @@ export class SimulatorStateService {
   computeField(silent = false): void {
     const { lat, lon, altura, isComputingField } = this.snapshot;
 
-    if (
-      lat === null ||
-      lon === null ||
-      altura === null ||
-      isComputingField
-    ) {
+    if (lat === null || lon === null || altura === null || isComputingField) {
       return;
     }
 
@@ -236,15 +204,15 @@ export class SimulatorStateService {
 
     const payload = { lat, lon, altura };
 
-    this.http
-      .post<BFieldResponse>(`${this.API_BASE}/compute-bfield`, payload)
+    this.simulatorApi
+      .computeBField(payload)
       .pipe(
         finalize(() => {
           this.patchState({ isComputingField: false });
         })
       )
       .subscribe({
-        next: (res) => {
+        next: (res: BFieldResponse) => {
           this.patchState({
             bx: res.bx,
             bz: res.bz,
@@ -253,8 +221,6 @@ export class SimulatorStateService {
           });
         },
         error: (err) => {
-          console.error(err);
-
           this.patchState({
             locationStatus:
               err?.error?.detail ?? 'No se pudo calcular Bx y Bz.',
@@ -266,12 +232,7 @@ export class SimulatorStateService {
   startSimulation(): void {
     const { bx, bz, altura, isSimulating } = this.snapshot;
 
-    if (
-      bx === null ||
-      bz === null ||
-      altura === null ||
-      isSimulating
-    ) {
+    if (bx === null || bz === null || altura === null || isSimulating) {
       return;
     }
 
@@ -292,15 +253,15 @@ export class SimulatorStateService {
         'Ejecutando simulación… esto puede tardar unos segundos.',
     });
 
-    this.http
-      .post<SimResponse>(`${this.API_BASE}/simulate-full`, payload)
+    this.simulatorApi
+      .simulateFull(payload)
       .pipe(
         finalize(() => {
           this.patchState({ isSimulating: false });
         })
       )
       .subscribe({
-        next: (res) => {
+        next: (res: SimResponse) => {
           this.patchState({
             simulationDone: true,
             mensajeResultado: res.message,
@@ -315,8 +276,6 @@ export class SimulatorStateService {
           });
         },
         error: (err) => {
-          console.error(err);
-
           this.patchState({
             simulationDone: false,
             mensajeResultado:
@@ -394,8 +353,7 @@ export class SimulatorStateService {
           ...(parsed.downloadUrls ?? {}),
         },
       };
-    } catch (error) {
-      console.error('No se pudo restaurar el estado del simulador:', error);
+    } catch {
       return this.initialState;
     }
   }
@@ -406,8 +364,8 @@ export class SimulatorStateService {
         this.STORAGE_KEY,
         JSON.stringify(this.toPersistedState(state))
       );
-    } catch (error) {
-      console.error('No se pudo guardar el estado del simulador:', error);
+    } catch {
+      // Silencioso por ahora para no ensuciar consola del usuario final.
     }
   }
 

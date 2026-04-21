@@ -1,9 +1,9 @@
+import logging
 import shutil
 import time
 import uuid
-import requests
-import traceback
 
+import requests
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
 from starlette.concurrency import run_in_threadpool
@@ -26,23 +26,20 @@ from ..core.settings import (
     THETA_MIN_DEG,
     THETA_N_BINS,
 )
-
 from ..schemas import (
     CityLookupRequest,
+    CityLookupResponse,
     FieldFromCoordsRequest,
+    FieldFromCoordsResponse,
     SimFullRequest,
-    SimRequest,
+    SimFullResponse,
 )
-
 from ..services.geo import compute_bfield_from_coords, geocode_city
-from ..services.jobs import (
-    simulate_angle_job,
-    simulate_energy_job,
-    simulate_full_job,
-)
+from ..services.jobs import simulate_full_job
 from ..services.storage import cleanup_old_runs
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.get("/health")
@@ -70,91 +67,42 @@ def health(request: Request):
     }
 
 
-@router.post("/resolve-city")
-def resolve_city(req: CityLookupRequest):
+@router.post("/resolve-city", response_model=CityLookupResponse)
+def resolve_city(req: CityLookupRequest) -> CityLookupResponse:
     try:
-        return geocode_city(req.city, req.country)
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        result = geocode_city(req.city, req.country)
+        return CityLookupResponse(**result)
+    except ValueError:
+        raise HTTPException(
+            status_code=404,
+            detail="No se pudo encontrar la ciudad indicada.",
+        )
     except requests.RequestException:
+        logger.exception("Fallo al consultar el servicio de geocodificación.")
         raise HTTPException(
             status_code=502,
             detail="No se pudo consultar el servicio de geocodificación.",
         )
 
 
-@router.post("/compute-bfield")
-def compute_bfield(req: FieldFromCoordsRequest):
+@router.post("/compute-bfield", response_model=FieldFromCoordsResponse)
+def compute_bfield(req: FieldFromCoordsRequest) -> FieldFromCoordsResponse:
     try:
-        return compute_bfield_from_coords(req.lat, req.lon, req.altura)
-    except Exception as e:
-        traceback.print_exc()
+        result = compute_bfield_from_coords(req.lat, req.lon, req.altura)
+        return FieldFromCoordsResponse(**result)
+    except Exception:
+        logger.exception("Fallo al calcular el campo geomagnético.")
         raise HTTPException(
             status_code=500,
-            detail=f"No se pudo calcular bx/bz: {repr(e)}",
+            detail="No se pudo calcular el campo geomagnético.",
         )
 
 
-@router.post("/simulate")
-async def simulate(req: SimRequest, request: Request):
-    request_start_perf = time.perf_counter()
-
-    model_key = (req.modelo or "").strip().lower()
-    if model_key not in {"energy", "angle"}:
-        raise HTTPException(
-            status_code=400,
-            detail="modelo inválido. Usa: ['energy', 'angle']",
-        )
-
-    bundle = request.app.state.models["joint"]
-
-    run_id = uuid.uuid4().hex
-    run_dir = RUNS_DIR / run_id
-    run_dir.mkdir(parents=True, exist_ok=True)
-
-    cleanup_old_runs(RUNS_DIR, RUN_TTL_SECONDS)
-
-    async with request.app.state.sim_sema:
-        try:
-            if model_key == "energy":
-                meta = await run_in_threadpool(
-                    simulate_energy_job,
-                    bundle,
-                    req,
-                    run_dir,
-                    request_start_perf,
-                )
-            else:
-                meta = await run_in_threadpool(
-                    simulate_angle_job,
-                    bundle,
-                    req,
-                    run_dir,
-                    request_start_perf,
-                )
-        except Exception as e:
-            shutil.rmtree(run_dir, ignore_errors=True)
-            raise HTTPException(status_code=500, detail=str(e))
-
-    total_request_elapsed_s = time.perf_counter() - request_start_perf
-    base = str(request.base_url).rstrip("/")
-
-    return {
-        "message": (
-            f"Simulation done (modelo={req.modelo}). "
-            f"N_target={meta['N_target']} | N_draw={meta['N_draw']} | "
-            f"acc≈{meta['acceptance']:.3f} | time={total_request_elapsed_s:.2f}s"
-        ),
-        "image_url": f"{base}/result/{run_id}/image.png",
-        "download_csv_url": f"{base}/download/{run_id}/results.csv",
-        "download_shw_url": f"{base}/download/{run_id}/results_shw.zip",
-        "run_id": run_id,
-        "simulation_time_s": round(total_request_elapsed_s, 4),
-    }
-
-
-@router.post("/simulate-full")
-async def simulate_full(req: SimFullRequest, request: Request):
+@router.post("/simulate-full", response_model=SimFullResponse)
+async def simulate_full(
+    req: SimFullRequest,
+    request: Request,
+) -> SimFullResponse:
     request_start_perf = time.perf_counter()
 
     bundle = request.app.state.models["joint"]
@@ -167,46 +115,39 @@ async def simulate_full(req: SimFullRequest, request: Request):
 
     async with request.app.state.sim_sema:
         try:
-            meta = await run_in_threadpool(
+            await run_in_threadpool(
                 simulate_full_job,
                 bundle,
                 req,
                 run_dir,
                 request_start_perf,
             )
-        except Exception as e:
+        except Exception:
             shutil.rmtree(run_dir, ignore_errors=True)
-            raise HTTPException(status_code=500, detail=str(e))
+            logger.exception("Fallo al ejecutar la simulación completa.")
+            raise HTTPException(
+                status_code=500,
+                detail="No se pudo completar la simulación.",
+            )
 
     total_request_elapsed_s = time.perf_counter() - request_start_perf
     base = str(request.base_url).rstrip("/")
 
-    return {
-        "message": (
-            "Simulación terminada. "
-
-        ),
-        "image_urls": [
+    return SimFullResponse(
+        message="Simulación terminada.",
+        image_urls=[
             f"{base}/result/{run_id}/energy.png",
             f"{base}/result/{run_id}/angle.png",
         ],
-        "image_labels": [
+        image_labels=[
             "Espectro de energía",
             "Espectro angular",
         ],
-        "download_csv_url": f"{base}/download/{run_id}/results.csv",
-        "download_shw_url": f"{base}/download/{run_id}/results_shw.zip",
-        "run_id": run_id,
-        "simulation_time_s": round(total_request_elapsed_s, 4),
-    }
-
-
-@router.get("/result/{run_id}/image.png")
-def get_result_image(run_id: str):
-    img_path = RUNS_DIR / run_id / "image.png"
-    if not img_path.exists():
-        raise HTTPException(status_code=404, detail="Imagen no encontrada")
-    return FileResponse(img_path, media_type="image/png", filename="image.png")
+        download_csv_url=f"{base}/download/{run_id}/results.csv",
+        download_shw_url=f"{base}/download/{run_id}/results_shw.zip",
+        run_id=run_id,
+        simulation_time_s=round(total_request_elapsed_s, 4),
+    )
 
 
 @router.get("/result/{run_id}/energy.png")

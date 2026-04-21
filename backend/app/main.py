@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .api.routes import router
-from .core.settings import MAX_CONCURRENT_SIMS
+from .core.settings import BACKEND_CORS_ORIGINS, MAX_CONCURRENT_SIMS
 from .services.model_loader import load_all_models
 
 
@@ -25,7 +25,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],
+    allow_origins=BACKEND_CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

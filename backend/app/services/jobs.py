@@ -22,7 +22,7 @@ from ..core.settings import (
     THETA_MAX_DEG,
     THETA_MIN_DEG,
 )
-from ..schemas import SimFullRequest, SimRequest
+from ..schemas import SimFullRequest
 from .helpers import (
     ctx_to_mm,
     get_angle_eps_mu,
@@ -40,17 +40,7 @@ from .physics import (
 )
 from .plotters import save_angle_spectrum_plot, save_energy_spectrum_plot
 from .sampling import sample_truncated_multi_context_robust
-from .writers import (
-    make_zip,
-    write_angle_csv,
-    write_angle_shw,
-    write_energy_csv,
-    write_energy_shw,
-    write_full_csv,
-    write_full_shw,
-)
-
-SimulationRequest = SimRequest | SimFullRequest
+from .writers import make_zip, write_full_csv, write_full_shw
 
 
 def _build_context_tensor(
@@ -83,85 +73,6 @@ def _compute_run_counts(altura: float) -> tuple[float, float, int, int]:
 def _write_meta_json(out_meta: Path, meta: dict) -> None:
     with open(out_meta, "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)
-
-
-def _build_energy_meta(
-    *,
-    bundle: ModelBundle,
-    req: SimRequest,
-    flux: float,
-    n_target_int: int,
-    n_draw: int,
-    scale: float,
-    acceptance: float,
-    clip_info: dict,
-    mu_encoding: str,
-    elapsed_s: float,
-) -> dict:
-    return {
-        "created_at": time.time(),
-        "tipo": "energy",
-        "modelo": req.modelo,
-        "bundle": bundle.name,
-        "trial_dir": str(bundle.trial_dir),
-        "features": int(bundle.features),
-        "mu_encoding": mu_encoding,
-        "bx_uT": float(req.bx),
-        "bz_uT": float(req.bz),
-        "altura_m": float(req.altura),
-        "flux_part_m2_s": float(flux),
-        "duration_s": float(SIM_DURATION_SECONDS),
-        "area_m2": float(AREA_M2),
-        "N_target": int(n_target_int),
-        "N_draw": int(n_draw),
-        "scale": float(scale),
-        "acceptance": float(acceptance),
-        "E_Y_MIN": float(bundle.cfg.get("y_min", E_Y_MIN)),
-        "E_Y_MAX": float(bundle.cfg.get("y_max", E_Y_MAX)),
-        "clip_info": clip_info,
-        "simulation_time_s": float(elapsed_s),
-    }
-
-
-def _build_angle_meta(
-    *,
-    bundle: ModelBundle,
-    req: SimRequest,
-    flux: float,
-    rate_total: float,
-    n_target_int: int,
-    n_draw: int,
-    scale: float,
-    acceptance: float,
-    mu_encoding: str,
-    clip_info: dict,
-    elapsed_s: float,
-) -> dict:
-    return {
-        "created_at": time.time(),
-        "tipo": "angle",
-        "modelo": req.modelo,
-        "bundle": bundle.name,
-        "trial_dir": str(bundle.trial_dir),
-        "features": int(bundle.features),
-        "mu_encoding": mu_encoding,
-        "bx_uT": float(req.bx),
-        "bz_uT": float(req.bz),
-        "altura_m": float(req.altura),
-        "flux_part_m2_s": float(flux),
-        "duration_s": float(SIM_DURATION_SECONDS),
-        "area_m2": float(AREA_M2),
-        "rate_total_part_m2_s": float(rate_total),
-        "N_target": int(n_target_int),
-        "N_draw": int(n_draw),
-        "scale": float(scale),
-        "acceptance": float(acceptance),
-        "mu_min": float(bundle.cfg.get("mu_min", get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
-        "mu_max": float(bundle.cfg.get("mu_max", 1.0 - get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
-        "theta_plot_range_deg": [float(THETA_MIN_DEG), float(THETA_MAX_DEG)],
-        "clip_info": clip_info,
-        "simulation_time_s": float(elapsed_s),
-    }
 
 
 def _build_full_meta(
@@ -264,149 +175,6 @@ def sample_joint_events(
     )
 
 
-def simulate_energy_job(
-    bundle: ModelBundle,
-    req: SimRequest,
-    run_dir: Path,
-    request_start_perf: float,
-) -> dict:
-    flux, _, n_target_int, n_draw = _compute_run_counts(req.altura)
-
-    (
-        energy_samples,
-        _,
-        _,
-        scale,
-        acceptance,
-        clip_info,
-        _,
-        mu_encoding,
-    ) = sample_joint_events(
-        bundle,
-        req.altura,
-        req.bx,
-        req.bz,
-        n_draw,
-        n_target_int,
-    )
-
-    out_png = run_dir / "image.png"
-    out_csv = run_dir / "results.csv"
-    out_meta = run_dir / "meta.json"
-    out_shw = run_dir / "results.shw"
-    out_zip = run_dir / "results_shw.zip"
-
-    elapsed_s = time.perf_counter() - request_start_perf
-    subtitle = (
-        f"numero_particulas={n_draw} | "
-        f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
-    )
-
-    save_energy_spectrum_plot(
-        out_png,
-        energy_samples,
-        scale,
-        "Espectro de energía (CNF)",
-        subtitle,
-        stats=bundle.stats,
-    )
-
-    meta = _build_energy_meta(
-        bundle=bundle,
-        req=req,
-        flux=flux,
-        n_target_int=n_target_int,
-        n_draw=n_draw,
-        scale=scale,
-        acceptance=acceptance,
-        clip_info=clip_info,
-        mu_encoding=mu_encoding,
-        elapsed_s=elapsed_s,
-    )
-
-    _write_meta_json(out_meta, meta)
-
-    write_energy_csv(out_csv, energy_samples, meta)
-    write_energy_shw(out_shw, energy_samples, meta)
-    make_zip(out_zip, [out_shw])
-
-    return meta
-
-
-def simulate_angle_job(
-    bundle: ModelBundle,
-    req: SimRequest,
-    run_dir: Path,
-    request_start_perf: float,
-) -> dict:
-    flux, _, n_target_int, n_draw = _compute_run_counts(req.altura)
-
-    (
-        _,
-        theta_deg,
-        _,
-        scale,
-        acceptance,
-        clip_info,
-        _,
-        mu_encoding,
-    ) = sample_joint_events(
-        bundle,
-        req.altura,
-        req.bx,
-        req.bz,
-        n_draw,
-        n_target_int,
-    )
-
-    mask_plot = (theta_deg >= THETA_MIN_DEG) & (theta_deg <= THETA_MAX_DEG)
-    theta_plot = theta_deg[mask_plot]
-
-    out_png = run_dir / "image.png"
-    out_csv = run_dir / "results.csv"
-    out_meta = run_dir / "meta.json"
-    out_shw = run_dir / "results.shw"
-    out_zip = run_dir / "results_shw.zip"
-
-    elapsed_s = time.perf_counter() - request_start_perf
-    rate_total = n_target_int / SIM_DURATION_SECONDS
-
-    subtitle = (
-        f"numero_particulas={n_draw} | "
-        f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
-    )
-
-    save_angle_spectrum_plot(
-        out_png=out_png,
-        theta_deg=theta_plot,
-        scale=scale,
-        title="Espectro Angular (CNF)",
-        subtitle=subtitle,
-    )
-
-    meta = _build_angle_meta(
-        bundle=bundle,
-        req=req,
-        flux=flux,
-        rate_total=rate_total,
-        n_target_int=n_target_int,
-        n_draw=n_draw,
-        scale=scale,
-        acceptance=acceptance,
-        mu_encoding=mu_encoding,
-        clip_info=clip_info,
-        elapsed_s=elapsed_s,
-    )
-
-    _write_meta_json(out_meta, meta)
-
-    write_angle_csv(out_csv, theta_plot, meta)
-    write_angle_shw(out_shw, theta_plot, meta)
-    make_zip(out_zip, [out_shw])
-
-    return meta
-
-
 def simulate_full_job(
     bundle: ModelBundle,
     req: SimFullRequest,
@@ -454,11 +222,7 @@ def simulate_full_job(
     elapsed_s = time.perf_counter() - request_start_perf
     rate_total = n_target_int / SIM_DURATION_SECONDS
 
-    subtitle_energy = (
-        f"numero_particulas={n_draw} | "
-        f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
-    )
-    subtitle_angle = (
+    subtitle = (
         f"numero_particulas={n_draw} | "
         f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
     )
@@ -468,7 +232,7 @@ def simulate_full_job(
         E=energy_samples,
         scale=scale,
         title="Espectro de Energía (CNF)",
-        subtitle=subtitle_energy,
+        subtitle=subtitle,
         stats=bundle.stats,
     )
 
@@ -477,7 +241,7 @@ def simulate_full_job(
         theta_deg=theta_plot,
         scale=scale,
         title="Espectro Angular (CNF)",
-        subtitle=subtitle_angle,
+        subtitle=subtitle,
     )
 
     n_below_mass = int(np.sum(energy_samples < MUON_MASS_GEV))

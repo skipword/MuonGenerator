@@ -4,6 +4,11 @@ from pathlib import Path
 import numpy as np
 import torch
 
+
+def _parse_cors_origins(raw: str) -> list[str]:
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+
 APP_DIR = Path(__file__).resolve().parent.parent
 MODELS_DIR = APP_DIR / "models"
 RUNS_DIR = APP_DIR / "runs"
@@ -67,4 +72,8 @@ GEOCODER_USER_AGENT = os.getenv(
 
 GEOCODER_TIMEOUT_SECONDS = float(
     os.getenv("GEOCODER_TIMEOUT_SECONDS", "20")
+)
+
+BACKEND_CORS_ORIGINS = _parse_cors_origins(
+    os.getenv("BACKEND_CORS_ORIGINS", "http://localhost:4200")
 )
