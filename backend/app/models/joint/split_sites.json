@@ -1,0 +1,53 @@
+{
+  "train_sites": [
+    "lisb",
+    "std",
+    "iqa",
+    "lim",
+    "chia",
+    "truj",
+    "bga",
+    "bra",
+    "alb",
+    "mge",
+    "denv",
+    "erz",
+    "sha",
+    "sudb",
+    "pra",
+    "pue",
+    "pamp",
+    "add",
+    "asp",
+    "casp",
+    "srm",
+    "quie",
+    "taw",
+    "fair",
+    "ker",
+    "asm",
+    "ber",
+    "lpb",
+    "and",
+    "mks",
+    "tib",
+    "sng",
+    "kom",
+    "khun",
+    "cha"
+  ],
+  "val_sites": [
+    "lond",
+    "gua",
+    "serb",
+    "ima",
+    "ata"
+  ],
+  "test_sites": [
+    "sjs",
+    "shi",
+    "cuchu",
+    "jun",
+    "zard"
+  ]
+}

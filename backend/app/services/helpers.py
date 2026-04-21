@@ -12,8 +12,50 @@ def load_json(path: Path) -> dict:
         return json.load(f)
 
 
-def get_angle_eps_mu(stats: dict, default: float = 1e-6) -> float:
+def get_energy_stats_key(stats: dict) -> str:
+    if "logE" in stats:
+        return "logE"
+    if "energy_log" in stats:
+        return "energy_log"
+    raise KeyError("No se encontró 'logE' ni 'energy_log' en stats.")
+
+
+def get_mu_encoding(stats: dict, cfg: dict | None = None) -> str:
+    texts = []
+
+    if isinstance(cfg, dict):
+        for key in ("target", "mu_target", "note"):
+            value = cfg.get(key)
+            if isinstance(value, str):
+                texts.append(value.lower())
+
+    for key in ("angle_mu", "angle_target"):
+        value = stats.get(key)
+        if isinstance(value, dict):
+            for subkey in ("type", "target", "transform"):
+                subvalue = value.get(subkey)
+                if isinstance(subvalue, str):
+                    texts.append(subvalue.lower())
+
+    joined = " | ".join(texts)
+    if any(token in joined for token in ("1-cos", "1 - cos", "1−cos", "1− cos", "1 -cos")):
+        return "one_minus_cos"
+    if "cos(theta" in joined or "cos(theta_deg" in joined:
+        return "cos"
+
+    if "logE" in stats and "mu" in stats:
+        return "one_minus_cos"
+
+    return "cos"
+
+
+def get_angle_eps_mu(stats: dict, cfg: dict | None = None, default: float = 1e-6) -> float:
     try:
+        if isinstance(cfg, dict):
+            for key in ("mu_min", "eps_mu", "eps_clip"):
+                if key in cfg:
+                    return float(cfg[key])
+
         if isinstance(stats.get("angle_mu"), dict) and "mu_clip_eps" in stats["angle_mu"]:
             return float(stats["angle_mu"]["mu_clip_eps"])
         if isinstance(stats.get("angle_target"), dict) and "eps_clip" in stats["angle_target"]:
@@ -56,15 +98,34 @@ def ctx_to_mm(
 
 
 def mm_to_energy(y: np.ndarray, stats: dict) -> np.ndarray:
-    e_min = float(stats["energy_log"]["min"])
-    e_max = float(stats["energy_log"]["max"])
+    energy_key = get_energy_stats_key(stats)
+    e_min = float(stats[energy_key]["min"])
+    e_max = float(stats[energy_key]["max"])
     z = y * (e_max - e_min) + e_min
     return np.exp(z)
 
 
-def mu_to_theta_deg(mu: np.ndarray) -> np.ndarray:
-    mu = np.clip(mu.astype(np.float64), 0.0, 1.0)
-    return np.rad2deg(np.arccos(mu)).astype(np.float32)
+def theta_deg_to_mu(theta_deg: np.ndarray, encoding: str = "cos") -> np.ndarray:
+    theta_rad = np.deg2rad(np.asarray(theta_deg, dtype=np.float64))
+    cos_theta = np.cos(theta_rad)
+
+    if encoding == "one_minus_cos":
+        mu = 1.0 - cos_theta
+    else:
+        mu = cos_theta
+
+    return np.clip(mu, 0.0, 1.0).astype(np.float32)
+
+
+def mu_to_theta_deg(mu: np.ndarray, encoding: str = "cos") -> np.ndarray:
+    mu = np.clip(np.asarray(mu, dtype=np.float64), 0.0, 1.0)
+
+    if encoding == "one_minus_cos":
+        arg = np.clip(1.0 - mu, -1.0, 1.0)
+    else:
+        arg = np.clip(mu, -1.0, 1.0)
+
+    return np.rad2deg(np.arccos(arg)).astype(np.float32)
 
 
 def pdf_theta_deg_from_pdf_mu(

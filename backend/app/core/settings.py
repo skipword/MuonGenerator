@@ -52,8 +52,7 @@ PZ_SIGN = float(os.getenv("PZ_SIGN", "1.0"))
 torch.set_num_threads(int(os.getenv("TORCH_NUM_THREADS", "1")))
 
 MODEL_REGISTRY = {
-    "energy": MODELS_DIR / "energy" / "trial_15",
-    "angle": MODELS_DIR / "angle" / "trial_12",
+    "joint": MODELS_DIR / "joint",
 }
 
 GEOCODER_BASE_URL = os.getenv(

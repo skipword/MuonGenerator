@@ -1,0 +1,26 @@
+{
+  "val_metric_total": [
+    {
+      "split": "val",
+      "rel_gl_mean_energy": 0.13625168435642313,
+      "rel_gl_mean_angle": 0.09441711841174688,
+      "rel_gl_mean_total": 0.115334401384085,
+      "N_events_Arti": 3528531,
+      "N_events_CNFs": 3529547,
+      "rel_events": 0.013957732006369728,
+      "time_sec": 120.68795575900003
+    }
+  ],
+  "test_metric_total": [
+    {
+      "split": "test",
+      "rel_gl_mean_energy": 0.11087094854792612,
+      "rel_gl_mean_angle": 0.07475277206375106,
+      "rel_gl_mean_total": 0.09281186030583859,
+      "N_events_Arti": 3337677,
+      "N_events_CNFs": 3313541,
+      "rel_events": 0.008147950338456552,
+      "time_sec": 113.46723740800007
+    }
+  ]
+}

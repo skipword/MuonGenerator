@@ -23,7 +23,13 @@ from ..core.settings import (
     THETA_MIN_DEG,
 )
 from ..schemas import SimFullRequest, SimRequest
-from .helpers import ctx_to_mm, get_angle_eps_mu, mm_to_energy, mu_to_theta_deg
+from .helpers import (
+    ctx_to_mm,
+    get_angle_eps_mu,
+    get_mu_encoding,
+    mm_to_energy,
+    mu_to_theta_deg,
+)
 from .model_loader import ModelBundle
 from .physics import (
     flux_per_m2_per_s,
@@ -33,7 +39,7 @@ from .physics import (
     target_counts,
 )
 from .plotters import save_angle_spectrum_plot, save_energy_spectrum_plot
-from .sampling import sample_truncated_single_context_robust
+from .sampling import sample_truncated_multi_context_robust
 from .writers import (
     make_zip,
     write_angle_csv,
@@ -89,6 +95,7 @@ def _build_energy_meta(
     scale: float,
     acceptance: float,
     clip_info: dict,
+    mu_encoding: str,
     elapsed_s: float,
 ) -> dict:
     return {
@@ -97,6 +104,8 @@ def _build_energy_meta(
         "modelo": req.modelo,
         "bundle": bundle.name,
         "trial_dir": str(bundle.trial_dir),
+        "features": int(bundle.features),
+        "mu_encoding": mu_encoding,
         "bx_uT": float(req.bx),
         "bz_uT": float(req.bz),
         "altura_m": float(req.altura),
@@ -107,8 +116,8 @@ def _build_energy_meta(
         "N_draw": int(n_draw),
         "scale": float(scale),
         "acceptance": float(acceptance),
-        "E_Y_MIN": float(E_Y_MIN),
-        "E_Y_MAX": float(E_Y_MAX),
+        "E_Y_MIN": float(bundle.cfg.get("y_min", E_Y_MIN)),
+        "E_Y_MAX": float(bundle.cfg.get("y_max", E_Y_MAX)),
         "clip_info": clip_info,
         "simulation_time_s": float(elapsed_s),
     }
@@ -124,7 +133,7 @@ def _build_angle_meta(
     n_draw: int,
     scale: float,
     acceptance: float,
-    eps_mu: float,
+    mu_encoding: str,
     clip_info: dict,
     elapsed_s: float,
 ) -> dict:
@@ -134,6 +143,8 @@ def _build_angle_meta(
         "modelo": req.modelo,
         "bundle": bundle.name,
         "trial_dir": str(bundle.trial_dir),
+        "features": int(bundle.features),
+        "mu_encoding": mu_encoding,
         "bx_uT": float(req.bx),
         "bz_uT": float(req.bz),
         "altura_m": float(req.altura),
@@ -145,7 +156,8 @@ def _build_angle_meta(
         "N_draw": int(n_draw),
         "scale": float(scale),
         "acceptance": float(acceptance),
-        "eps_mu": float(eps_mu),
+        "mu_min": float(bundle.cfg.get("mu_min", get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
+        "mu_max": float(bundle.cfg.get("mu_max", 1.0 - get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
         "theta_plot_range_deg": [float(THETA_MIN_DEG), float(THETA_MAX_DEG)],
         "clip_info": clip_info,
         "simulation_time_s": float(elapsed_s),
@@ -154,30 +166,27 @@ def _build_angle_meta(
 
 def _build_full_meta(
     *,
-    bundle_energy: ModelBundle,
-    bundle_angle: ModelBundle,
+    bundle: ModelBundle,
     req: SimFullRequest,
     flux: float,
     rate_total: float,
     n_target_int: int,
     n_draw: int,
-    energy_scale: float,
-    angle_scale: float,
-    energy_acceptance: float,
-    angle_acceptance: float,
-    eps_mu: float,
+    scale: float,
+    acceptance: float,
+    mu_encoding: str,
     n_below_mass: int,
-    energy_clip_info: dict,
-    angle_clip_info: dict,
+    clip_info: dict,
     elapsed_s: float,
 ) -> dict:
     return {
         "created_at": time.time(),
         "tipo": "full",
-        "bundle_energy": bundle_energy.name,
-        "bundle_angle": bundle_angle.name,
-        "trial_dir_energy": str(bundle_energy.trial_dir),
-        "trial_dir_angle": str(bundle_angle.trial_dir),
+        "bundle": bundle.name,
+        "trial_dir": str(bundle.trial_dir),
+        "features": int(bundle.features),
+        "sampling_mode": "joint_2d",
+        "mu_encoding": mu_encoding,
         "bx_uT": float(req.bx),
         "bz_uT": float(req.bz),
         "altura_m": float(req.altura),
@@ -187,98 +196,71 @@ def _build_full_meta(
         "rate_total_part_m2_s": float(rate_total),
         "N_target": int(n_target_int),
         "N_draw": int(n_draw),
-        "energy_scale": float(energy_scale),
-        "angle_scale": float(angle_scale),
-        "energy_acceptance": float(energy_acceptance),
-        "angle_acceptance": float(angle_acceptance),
-        "E_Y_MIN": float(E_Y_MIN),
-        "E_Y_MAX": float(E_Y_MAX),
-        "eps_mu": float(eps_mu),
+        "scale": float(scale),
+        "acceptance": float(acceptance),
+        "E_Y_MIN": float(bundle.cfg.get("y_min", E_Y_MIN)),
+        "E_Y_MAX": float(bundle.cfg.get("y_max", E_Y_MAX)),
+        "mu_min": float(bundle.cfg.get("mu_min", get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
+        "mu_max": float(bundle.cfg.get("mu_max", 1.0 - get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
         "theta_plot_range_deg": [float(THETA_MIN_DEG), float(THETA_MAX_DEG)],
         "phi_distribution": "uniform_deg_[0,360)",
         "muon_mass_GeV": float(MUON_MASS_GEV),
         "pz_sign_convention": float(PZ_SIGN),
         "n_energy_below_muon_mass": int(n_below_mass),
-        "clip_info_energy": energy_clip_info,
-        "clip_info_angle": angle_clip_info,
+        "clip_info": clip_info,
         "simulation_time_s": float(elapsed_s),
     }
 
 
-def sample_energy_events(
+def sample_joint_events(
     bundle: ModelBundle,
     altura: float,
     bx: float,
     bz: float,
     n_draw: int,
     n_target_int: int,
-) -> tuple[np.ndarray, float, float, dict, torch.Tensor]:
-    if "energy_log" not in bundle.stats:
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, float, float, dict, torch.Tensor, str]:
+    if bundle.features != 2:
         raise RuntimeError(
-            "stats del modelo de energía deben incluir 'energy_log' (min/max de logE)."
+            f"El modelo cargado debe tener 2 features (energía y mu). Encontrado: {bundle.features}."
         )
 
+    mu_encoding = get_mu_encoding(bundle.stats, bundle.cfg)
+    mu_eps = get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT)
+
+    e_y_min = float(bundle.cfg.get("y_min", E_Y_MIN))
+    e_y_max = float(bundle.cfg.get("y_max", E_Y_MAX))
+    mu_min = float(bundle.cfg.get("mu_min", mu_eps))
+    mu_max = float(bundle.cfg.get("mu_max", 1.0 - mu_eps))
+
     _, clip_info, context_tensor = _build_context_tensor(bundle, altura, bx, bz)
 
-    y_samples, acceptance = sample_truncated_single_context_robust(
-        bundle.flow,
+    joint_samples, acceptance = sample_truncated_multi_context_robust(
+        flow=bundle.flow,
         c1=context_tensor,
         n=n_draw,
-        y_min=E_Y_MIN,
-        y_max=E_Y_MAX,
+        bounds=[(e_y_min, e_y_max), (mu_min, mu_max)],
         batch=SAMPLE_BATCH,
         oversample_factor=OVERSAMPLE_FACTOR,
         max_loops=MAX_LOOPS,
         shuffle_accept=True,
     )
 
-    scale = (n_target_int * acceptance / n_draw) if n_draw > 0 else 1.0
-    energy_samples = mm_to_energy(y_samples, bundle.stats)
-    energy_samples = np.asarray(energy_samples, dtype=np.float64).reshape(-1)
-
-    return energy_samples, scale, acceptance, clip_info, context_tensor
-
-
-def sample_angle_events(
-    bundle: ModelBundle,
-    altura: float,
-    bx: float,
-    bz: float,
-    n_draw: int,
-    n_target_int: int,
-) -> tuple[np.ndarray, np.ndarray, float, float, dict, torch.Tensor, float]:
-    eps_mu = get_angle_eps_mu(bundle.stats, default=ANGLE_EPS_DEFAULT)
-    try:
-        if isinstance(bundle.stats.get("angle_target"), dict):
-            eps_mu = float(bundle.stats["angle_target"].get("eps_clip", eps_mu))
-    except Exception:
-        pass
-
-    _, clip_info, context_tensor = _build_context_tensor(bundle, altura, bx, bz)
-
-    mu_samples, acceptance = sample_truncated_single_context_robust(
-        bundle.flow,
-        c1=context_tensor,
-        n=n_draw,
-        y_min=eps_mu,
-        y_max=1.0 - eps_mu,
-        batch=SAMPLE_BATCH,
-        oversample_factor=OVERSAMPLE_FACTOR,
-        max_loops=MAX_LOOPS,
-        shuffle_accept=True,
-    )
-
-    theta_deg = mu_to_theta_deg(mu_samples).reshape(-1)
+    energy_mm = np.asarray(joint_samples[:, 0], dtype=np.float64).reshape(-1)
+    mu_samples = np.asarray(joint_samples[:, 1], dtype=np.float64).reshape(-1)
+    energy_samples = np.asarray(mm_to_energy(energy_mm, bundle.stats), dtype=np.float64).reshape(-1)
+    theta_deg = mu_to_theta_deg(mu_samples, encoding=mu_encoding).reshape(-1)
     scale = (n_target_int / n_draw) if n_draw > 0 else 1.0
 
     return (
+        energy_samples,
         theta_deg,
-        mu_samples.reshape(-1),
+        mu_samples,
         scale,
         acceptance,
         clip_info,
         context_tensor,
-        eps_mu,
+        mu_encoding,
     )
 
 
@@ -288,35 +270,25 @@ def simulate_energy_job(
     run_dir: Path,
     request_start_perf: float,
 ) -> dict:
-    if "energy_log" not in bundle.stats:
-        raise RuntimeError(
-            "stats del modelo de energía deben incluir 'energy_log' (min/max de logE)."
-        )
-
     flux, _, n_target_int, n_draw = _compute_run_counts(req.altura)
 
-    _, clip_info, context_tensor = _build_context_tensor(
+    (
+        energy_samples,
+        _,
+        _,
+        scale,
+        acceptance,
+        clip_info,
+        _,
+        mu_encoding,
+    ) = sample_joint_events(
         bundle,
         req.altura,
         req.bx,
         req.bz,
+        n_draw,
+        n_target_int,
     )
-
-    y_samples, acceptance = sample_truncated_single_context_robust(
-        bundle.flow,
-        c1=context_tensor,
-        n=n_draw,
-        y_min=E_Y_MIN,
-        y_max=E_Y_MAX,
-        batch=SAMPLE_BATCH,
-        oversample_factor=OVERSAMPLE_FACTOR,
-        max_loops=MAX_LOOPS,
-        shuffle_accept=True,
-    )
-
-    scale = (n_target_int * acceptance / n_draw) if n_draw > 0 else 1.0
-    energy_samples = mm_to_energy(y_samples, bundle.stats)
-    energy_samples = np.asarray(energy_samples, dtype=np.float64).reshape(-1)
 
     out_png = run_dir / "image.png"
     out_csv = run_dir / "results.csv"
@@ -326,15 +298,15 @@ def simulate_energy_job(
 
     elapsed_s = time.perf_counter() - request_start_perf
     subtitle = (
-        f"model={bundle.name} | N_draw={n_draw} | "
-        f"T={SIM_DURATION_SECONDS:g}s | sim_time={elapsed_s:.2f}s"
+        f"numero_particulas={n_draw} | "
+        f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
     )
 
     save_energy_spectrum_plot(
         out_png,
         energy_samples,
         scale,
-        "Energy Spectrum (CNF)",
+        "Espectro de energía (CNF)",
         subtitle,
         stats=bundle.stats,
     )
@@ -348,6 +320,7 @@ def simulate_energy_job(
         scale=scale,
         acceptance=acceptance,
         clip_info=clip_info,
+        mu_encoding=mu_encoding,
         elapsed_s=elapsed_s,
     )
 
@@ -367,35 +340,24 @@ def simulate_angle_job(
     request_start_perf: float,
 ) -> dict:
     flux, _, n_target_int, n_draw = _compute_run_counts(req.altura)
-    scale = (n_target_int / n_draw) if n_draw > 0 else 1.0
 
-    eps_mu = get_angle_eps_mu(bundle.stats, default=ANGLE_EPS_DEFAULT)
-    try:
-        if isinstance(bundle.stats.get("angle_target"), dict):
-            eps_mu = float(bundle.stats["angle_target"].get("eps_clip", eps_mu))
-    except Exception:
-        pass
-
-    _, clip_info, context_tensor = _build_context_tensor(
+    (
+        _,
+        theta_deg,
+        _,
+        scale,
+        acceptance,
+        clip_info,
+        _,
+        mu_encoding,
+    ) = sample_joint_events(
         bundle,
         req.altura,
         req.bx,
         req.bz,
+        n_draw,
+        n_target_int,
     )
-
-    mu_samples, acceptance = sample_truncated_single_context_robust(
-        bundle.flow,
-        c1=context_tensor,
-        n=n_draw,
-        y_min=eps_mu,
-        y_max=1.0 - eps_mu,
-        batch=SAMPLE_BATCH,
-        oversample_factor=OVERSAMPLE_FACTOR,
-        max_loops=MAX_LOOPS,
-        shuffle_accept=True,
-    )
-
-    theta_deg = mu_to_theta_deg(mu_samples)
 
     mask_plot = (theta_deg >= THETA_MIN_DEG) & (theta_deg <= THETA_MAX_DEG)
     theta_plot = theta_deg[mask_plot]
@@ -410,19 +372,15 @@ def simulate_angle_job(
     rate_total = n_target_int / SIM_DURATION_SECONDS
 
     subtitle = (
-        f"model={bundle.name} | N_draw={n_draw} | "
-        f"T={SIM_DURATION_SECONDS:g}s | sim_time={elapsed_s:.2f}s"
+        f"numero_particulas={n_draw} | "
+        f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
     )
 
     save_angle_spectrum_plot(
         out_png=out_png,
         theta_deg=theta_plot,
         scale=scale,
-        rate_total=rate_total,
-        flow=bundle.flow,
-        context_vec=context_tensor,
-        eps_mu=eps_mu,
-        title="Angular spectrum (CNF)",
+        title="Espectro Angular (CNF)",
         subtitle=subtitle,
     )
 
@@ -435,7 +393,7 @@ def simulate_angle_job(
         n_draw=n_draw,
         scale=scale,
         acceptance=acceptance,
-        eps_mu=eps_mu,
+        mu_encoding=mu_encoding,
         clip_info=clip_info,
         elapsed_s=elapsed_s,
     )
@@ -450,42 +408,30 @@ def simulate_angle_job(
 
 
 def simulate_full_job(
-    bundle_energy: ModelBundle,
-    bundle_angle: ModelBundle,
+    bundle: ModelBundle,
     req: SimFullRequest,
     run_dir: Path,
     request_start_perf: float,
 ) -> dict:
     flux, _, n_target_int, n_draw = _compute_run_counts(req.altura)
 
-    energy_samples, energy_scale, energy_acceptance, energy_clip_info, _ = sample_energy_events(
-        bundle_energy,
-        req.altura,
-        req.bx,
-        req.bz,
-        n_draw,
-        n_target_int,
-    )
-
     (
+        energy_samples,
         theta_deg,
         _,
-        angle_scale,
-        angle_acceptance,
-        angle_clip_info,
-        angle_context_tensor,
-        eps_mu,
-    ) = sample_angle_events(
-        bundle_angle,
+        scale,
+        acceptance,
+        clip_info,
+        _,
+        mu_encoding,
+    ) = sample_joint_events(
+        bundle,
         req.altura,
         req.bx,
         req.bz,
         n_draw,
         n_target_int,
     )
-
-    if len(energy_samples) != len(theta_deg):
-        raise RuntimeError("La cantidad de energías y ángulos no coincide.")
 
     phi_deg = sample_phi_deg_uniform(n_draw)
     p_gev_c = momentum_from_total_energy_GeV(energy_samples)
@@ -509,53 +455,45 @@ def simulate_full_job(
     rate_total = n_target_int / SIM_DURATION_SECONDS
 
     subtitle_energy = (
-        f"model=energy | N_draw={n_draw} | "
-        f"T={SIM_DURATION_SECONDS:g}s | sim_time={elapsed_s:.2f}s"
+        f"numero_particulas={n_draw} | "
+        f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
     )
     subtitle_angle = (
-        f"model=angle | N_draw={n_draw} | "
-        f"T={SIM_DURATION_SECONDS:g}s | sim_time={elapsed_s:.2f}s"
+        f"numero_particulas={n_draw} | "
+        f"tiempo_flujo={SIM_DURATION_SECONDS:g}s | tiempo_simulado={elapsed_s:.2f}s"
     )
 
     save_energy_spectrum_plot(
         out_png=out_energy_png,
         E=energy_samples,
-        scale=energy_scale,
-        title="Energy Spectrum (CNF)",
+        scale=scale,
+        title="Espectro de Energía (CNF)",
         subtitle=subtitle_energy,
-        stats=bundle_energy.stats,
+        stats=bundle.stats,
     )
 
     save_angle_spectrum_plot(
         out_png=out_angle_png,
         theta_deg=theta_plot,
-        scale=angle_scale,
-        rate_total=rate_total,
-        flow=bundle_angle.flow,
-        context_vec=angle_context_tensor,
-        eps_mu=eps_mu,
-        title="Angular spectrum (CNF)",
+        scale=scale,
+        title="Espectro Angular (CNF)",
         subtitle=subtitle_angle,
     )
 
     n_below_mass = int(np.sum(energy_samples < MUON_MASS_GEV))
 
     meta = _build_full_meta(
-        bundle_energy=bundle_energy,
-        bundle_angle=bundle_angle,
+        bundle=bundle,
         req=req,
         flux=flux,
         rate_total=rate_total,
         n_target_int=n_target_int,
         n_draw=n_draw,
-        energy_scale=energy_scale,
-        angle_scale=angle_scale,
-        energy_acceptance=energy_acceptance,
-        angle_acceptance=angle_acceptance,
-        eps_mu=eps_mu,
+        scale=scale,
+        acceptance=acceptance,
+        mu_encoding=mu_encoding,
         n_below_mass=n_below_mass,
-        energy_clip_info=energy_clip_info,
-        angle_clip_info=angle_clip_info,
+        clip_info=clip_info,
         elapsed_s=elapsed_s,
     )
 
@@ -588,5 +526,3 @@ def simulate_full_job(
     make_zip(out_zip, [out_shw])
 
     return meta
-
-

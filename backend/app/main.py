@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Backend Simulador Muones (CNF energy + angle)",
+    title="Backend Simulador Muones (CNF joint energy+angle)",
     lifespan=lifespan,
 )
 

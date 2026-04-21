@@ -69,6 +69,7 @@ def health(request: Request):
         },
     }
 
+
 @router.post("/resolve-city")
 def resolve_city(req: CityLookupRequest):
     try:
@@ -93,18 +94,19 @@ def compute_bfield(req: FieldFromCoordsRequest):
             detail=f"No se pudo calcular bx/bz: {repr(e)}",
         )
 
+
 @router.post("/simulate")
 async def simulate(req: SimRequest, request: Request):
     request_start_perf = time.perf_counter()
 
     model_key = (req.modelo or "").strip().lower()
-    if model_key not in request.app.state.models:
+    if model_key not in {"energy", "angle"}:
         raise HTTPException(
             status_code=400,
-            detail=f"modelo inválido: '{req.modelo}'. Usa: {list(request.app.state.models.keys())}",
+            detail="modelo inválido. Usa: ['energy', 'angle']",
         )
 
-    bundle = request.app.state.models[model_key]
+    bundle = request.app.state.models["joint"]
 
     run_id = uuid.uuid4().hex
     run_dir = RUNS_DIR / run_id
@@ -122,7 +124,7 @@ async def simulate(req: SimRequest, request: Request):
                     run_dir,
                     request_start_perf,
                 )
-            elif model_key == "angle":
+            else:
                 meta = await run_in_threadpool(
                     simulate_angle_job,
                     bundle,
@@ -130,8 +132,6 @@ async def simulate(req: SimRequest, request: Request):
                     run_dir,
                     request_start_perf,
                 )
-            else:
-                raise HTTPException(status_code=400, detail="modelo no soportado")
         except Exception as e:
             shutil.rmtree(run_dir, ignore_errors=True)
             raise HTTPException(status_code=500, detail=str(e))
@@ -157,8 +157,7 @@ async def simulate(req: SimRequest, request: Request):
 async def simulate_full(req: SimFullRequest, request: Request):
     request_start_perf = time.perf_counter()
 
-    bundle_energy = request.app.state.models["energy"]
-    bundle_angle = request.app.state.models["angle"]
+    bundle = request.app.state.models["joint"]
 
     run_id = uuid.uuid4().hex
     run_dir = RUNS_DIR / run_id
@@ -170,8 +169,7 @@ async def simulate_full(req: SimFullRequest, request: Request):
         try:
             meta = await run_in_threadpool(
                 simulate_full_job,
-                bundle_energy,
-                bundle_angle,
+                bundle,
                 req,
                 run_dir,
                 request_start_perf,
@@ -185,18 +183,16 @@ async def simulate_full(req: SimFullRequest, request: Request):
 
     return {
         "message": (
-            "Simulation done. "
-            f"N_target={meta['N_target']} | N_draw={meta['N_draw']} | "
-            f"accE≈{meta['energy_acceptance']:.3f} | accA≈{meta['angle_acceptance']:.3f} | "
-            f"time={total_request_elapsed_s:.2f}s"
+            "Simulación terminada. "
+
         ),
         "image_urls": [
             f"{base}/result/{run_id}/energy.png",
             f"{base}/result/{run_id}/angle.png",
         ],
         "image_labels": [
-            "Energy spectrum",
-            "Angular spectrum",
+            "Espectro de energía",
+            "Espectro angular",
         ],
         "download_csv_url": f"{base}/download/{run_id}/results.csv",
         "download_shw_url": f"{base}/download/{run_id}/results_shw.zip",
