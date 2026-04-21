@@ -1,3 +1,3 @@
 export const environment = {
-  apiBaseUrl: 'http://localhost:8000',
+  apiBaseUrl: 'https://muongenerator.onrender.com',
 };
