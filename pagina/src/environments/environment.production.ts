@@ -1,3 +1,3 @@
 export const environment = {
-  apiBaseUrl: 'https://muongenerator.onrender.com',
+  apiBaseUrl: 'https://skipword-muon-backend.hf.space',
 };
