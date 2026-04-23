@@ -152,10 +152,6 @@
 
         <div class="results-viewer" *ngIf="resultImageUrls.length > 0">
           <div class="results-viewer__content">
-            <p class="results-image-label" *ngIf="currentImageLabel">
-              {{ currentImageLabel }}
-            </p>
-
             <img
               [src]="currentImageUrl"
               alt="Simulation result"

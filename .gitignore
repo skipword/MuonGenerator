@@ -18,3 +18,5 @@ pagina/.angular/cache/
 .idea/
 .DS_Store
 Thumbs.db
+
+.vercel
