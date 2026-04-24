@@ -20,6 +20,11 @@ export class SimulatorComponent implements OnInit, OnDestroy {
   private stateSub?: Subscription;
   private state: SimulatorState;
 
+  private generationStartMs: number | null = null;
+  private waitingForFirstRenderedResult = false;
+
+  totalDisplayTimeSec: number | null = null;
+
   constructor(private readonly simulatorState: SimulatorStateService) {
     this.state = this.simulatorState.snapshot;
   }
@@ -163,6 +168,14 @@ export class SimulatorComponent implements OnInit, OnDestroy {
     );
   }
 
+  get formattedTotalDisplayTime(): string {
+    if (this.totalDisplayTimeSec === null) {
+      return '';
+    }
+
+    return this.totalDisplayTimeSec.toFixed(2).replace('.', ',');
+  }
+
   onResolveCity(): void {
     this.simulatorState.resolveCity();
   }
@@ -182,7 +195,22 @@ export class SimulatorComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.generationStartMs = performance.now();
+    this.waitingForFirstRenderedResult = true;
+    this.totalDisplayTimeSec = null;
+
     this.simulatorState.startSimulation();
+  }
+
+  onResultImageLoad(): void {
+    if (!this.waitingForFirstRenderedResult || this.generationStartMs === null) {
+      return;
+    }
+
+    this.totalDisplayTimeSec =
+      (performance.now() - this.generationStartMs) / 1000;
+
+    this.waitingForFirstRenderedResult = false;
   }
 
   prevImage(): void {
