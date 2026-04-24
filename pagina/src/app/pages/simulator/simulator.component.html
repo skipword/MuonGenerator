@@ -186,6 +186,9 @@
             </div>
           </div>
         </div>
+        <p class="results-total-time" *ngIf="totalDisplayTimeSec !== null">
+          Tiempo total de generación y visualización: {{ formattedTotalDisplayTime }} s
+        </p>
       </ng-container>
     </div>
 

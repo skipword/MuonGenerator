@@ -22,6 +22,7 @@ export class SimulatorComponent implements OnInit, OnDestroy {
 
   private generationStartMs: number | null = null;
   private waitingForFirstRenderedResult = false;
+  private hasMeasuredCurrentRun = false;
 
   totalDisplayTimeSec: number | null = null;
 
@@ -31,7 +32,22 @@ export class SimulatorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.stateSub = this.simulatorState.state$.subscribe((state) => {
+      const previousImageUrl = this.state.resultImageUrls[0] ?? '';
       this.state = state;
+
+      const nextFirstImageUrl = state.resultImageUrls[0] ?? '';
+
+      // Cuando llega una nueva simulación con imágenes, medimos el tiempo
+      // cargando programáticamente la primera imagen.
+      if (
+        this.waitingForFirstRenderedResult &&
+        !this.hasMeasuredCurrentRun &&
+        state.simulationDone &&
+        nextFirstImageUrl &&
+        nextFirstImageUrl !== previousImageUrl
+      ) {
+        this.measureUntilFirstImageRendered(nextFirstImageUrl);
+      }
     });
   }
 
@@ -197,20 +213,10 @@ export class SimulatorComponent implements OnInit, OnDestroy {
 
     this.generationStartMs = performance.now();
     this.waitingForFirstRenderedResult = true;
+    this.hasMeasuredCurrentRun = false;
     this.totalDisplayTimeSec = null;
 
     this.simulatorState.startSimulation();
-  }
-
-  onResultImageLoad(): void {
-    if (!this.waitingForFirstRenderedResult || this.generationStartMs === null) {
-      return;
-    }
-
-    this.totalDisplayTimeSec =
-      (performance.now() - this.generationStartMs) / 1000;
-
-    this.waitingForFirstRenderedResult = false;
   }
 
   prevImage(): void {
@@ -234,5 +240,33 @@ export class SimulatorComponent implements OnInit, OnDestroy {
     }
 
     window.open(url, '_blank', 'noopener');
+  }
+
+  private measureUntilFirstImageRendered(imageUrl: string): void {
+    if (this.generationStartMs === null) {
+      return;
+    }
+
+    const img = new Image();
+
+    const finishMeasurement = () => {
+      if (
+        this.hasMeasuredCurrentRun ||
+        !this.waitingForFirstRenderedResult ||
+        this.generationStartMs === null
+      ) {
+        return;
+      }
+
+      this.totalDisplayTimeSec =
+        (performance.now() - this.generationStartMs) / 1000;
+
+      this.hasMeasuredCurrentRun = true;
+      this.waitingForFirstRenderedResult = false;
+    };
+
+    img.onload = () => finishMeasurement();
+    img.onerror = () => finishMeasurement();
+    img.src = imageUrl;
   }
 }
