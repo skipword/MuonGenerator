@@ -7,33 +7,33 @@
 .desc-card {
   background: #ffffff;
   border-radius: 18px;
-  padding: 20px 24px 24px;
+  padding: 22px 24px 26px;
   box-shadow: 0 0 0 1px #e5e7eb;
 }
 
 .desc-card__title {
-  font-size: 16px;
+  font-size: 1.15rem;
   font-weight: 600;
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   color: #111827;
 }
 
 .desc-block {
   & + & {
-    margin-top: 14px;
+    margin-top: 16px;
   }
 }
 
 .desc-block__subtitle {
-  font-size: 14px;
+  font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   color: #111827;
 }
 
 .desc-block__text {
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.7;
   color: #6b7280;
   margin: 0;
 }

@@ -2,7 +2,7 @@
   <div class="sim-layout__left">
     <h1 class="sim-title">Generador global del flujo de muones</h1>
     <p class="sim-subtitle">
-      Busque una ciudad para autocompletar latitud y longitud. La altura, Bx y Bz
+      Busque una ciudad para autocompletar latitud y longitud. La altura, B<sub>x</sub> y B<sub>z</sub>
       pueden ajustarse manualmente antes de ejecutar la simulación.
     </p>
 
@@ -46,9 +46,7 @@
         <strong>Lugar encontrado:</strong> {{ resolvedDisplayName }}
       </p>
 
-      <p class="field-hint">
-        {{ locationStatus }}
-      </p>
+      <p class="field-hint" [innerHTML]="locationStatus"></p>
 
       <div class="form-field">
         <label for="lat">Latitud</label>
@@ -103,7 +101,7 @@
       </div>
 
       <div class="form-field">
-        <label for="bx">Bx (µT)</label>
+        <label for="bx">B<sub>x</sub> (µT)</label>
         <input
           id="bx"
           type="number"
@@ -115,7 +113,7 @@
       </div>
 
       <div class="form-field">
-        <label for="bz">Bz (µT)</label>
+        <label for="bz">B<sub>z</sub> (µT)</label>
         <input
           id="bz"
           type="number"
@@ -139,7 +137,7 @@
   <div class="sim-layout__right">
     <div class="results-card">
       <ng-container *ngIf="!isSimulating && !simulationDone">
-        <p>{{ mensajeResultado }}</p>
+        <p class="results-text" [innerHTML]="mensajeResultado"></p>
       </ng-container>
 
       <ng-container *ngIf="isSimulating">

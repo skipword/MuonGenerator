@@ -90,11 +90,9 @@ export class SimulatorStateService {
     formato: '',
 
     mensajeResultado:
-      'Complete el formulario y haga clic en "Generar distribución" para ver los resultados.',
-
+      'Complete el <strong>formulario de la izquierda</strong> y luego haga clic en "Generar espectro" para ver los resultados.',
     locationStatus:
-      'Busque una ciudad para autocompletar latitud y longitud. Luego ajuste la altura y actualice Bx/Bz.',
-
+      'Busque una ciudad para autocompletar latitud y longitud. Luego ajuste la altura y actualice B<sub>x</sub> y B<sub>z</sub>.',
     resolvedDisplayName: '',
 
     isResolvingCity: false,
@@ -170,7 +168,7 @@ export class SimulatorStateService {
           if (altura !== null) {
             this.patchState({
               locationStatus:
-                'Ciudad encontrada. Actualizando automáticamente Bx y Bz...',
+                'Ciudad encontrada. Actualizando automáticamente B<sub>x</sub> y B<sub>z</sub>...'
             });
             this.computeField(true);
             return;
@@ -178,7 +176,7 @@ export class SimulatorStateService {
 
           this.patchState({
             locationStatus:
-              'Ciudad encontrada. Ahora ingrese o ajuste la altura y luego actualice Bx/Bz.',
+              'Ciudad encontrada. Ahora ingrese o ajuste la altura y luego actualice B<sub>x</sub>/B<sub>z</sub>.'
           });
         },
         error: () => {
@@ -199,7 +197,7 @@ export class SimulatorStateService {
 
     this.patchState({
       isComputingField: true,
-      ...(silent ? {} : { locationStatus: 'Calculando Bx y Bz...' }),
+      ...(silent ? {} : { locationStatus: 'Calculando B<sub>x</sub> y B<sub>z</sub>...' }),
     });
 
     const payload = { lat, lon, altura };
@@ -217,7 +215,7 @@ export class SimulatorStateService {
             bx: res.bx,
             bz: res.bz,
             locationStatus:
-              'Bx y Bz actualizados. Puede ajustarlos manualmente si necesita un valor más específico.',
+              'B<sub>x</sub> y B<sub>z</sub> actualizados. Puede ajustarlos manualmente si necesita un valor más específico.',
           });
         },
         error: (err) => {
@@ -365,7 +363,7 @@ export class SimulatorStateService {
         JSON.stringify(this.toPersistedState(state))
       );
     } catch {
-      // Silencioso por ahora para no ensuciar consola del usuario final.
+      // proximamente jejeje
     }
   }
 
