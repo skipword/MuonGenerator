@@ -1,0 +1,24 @@
+{
+  "base_seed": 42,
+  "epochs": 20,
+  "lr": 0.0003,
+  "hidden_features": 192,
+  "num_layers": 6,
+  "num_bins": 4,
+  "tail_bound": 8,
+  "eval_seeds": [
+    5,
+    503,
+    1001,
+    1501,
+    1999
+  ],
+  "y_min": 0.0,
+  "y_max": 0.85,
+  "mu_min": 1e-06,
+  "mu_max": 0.999999,
+  "sample_batch": 8192,
+  "target_per_site_train": 370000,
+  "n_bins_downsample": 100,
+  "event_formula": "N_events = 3600 * 100.4 * exp(0.0002119 * h)"
+}
