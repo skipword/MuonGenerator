@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict, Field
+from typing import Literal
 
+from pydantic import BaseModel, ConfigDict, Field
 
 class CityLookupRequest(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
@@ -35,6 +36,7 @@ class SimFullRequest(BaseModel):
     bx: float
     bz: float
     altura: float = Field(..., ge=0)
+    lang: Literal["es", "en", "pt", "fr"] = "es"
 
 
 class SimFullResponse(BaseModel):

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import {
   SimulatorState,
   SimulatorStateService,
 } from '../../services/simulator-state.service';
+import { LanguageService } from '../../i18n/language.service';
 
 @Component({
   selector: 'app-simulator',
@@ -17,6 +18,8 @@ import {
   styleUrl: './simulator.component.scss',
 })
 export class SimulatorComponent implements OnInit, OnDestroy {
+  readonly i18n = inject(LanguageService);
+
   private stateSub?: Subscription;
   private state: SimulatorState;
 

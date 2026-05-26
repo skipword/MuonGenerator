@@ -35,6 +35,7 @@ export type SimFullRequest = {
   bx: number;
   bz: number;
   altura: number;
+  lang?: 'es' | 'en' | 'pt' | 'fr';
 };
 
 export type SimResponse = {

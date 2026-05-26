@@ -74,6 +74,42 @@ def _write_meta_json(out_meta: Path, meta: dict) -> None:
     with open(out_meta, "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=2)
 
+GRAPH_INFO_TEXTS = {
+    "es": {
+        "particles": "Número de partículas",
+        "flux_time": "Tiempo de flujo",
+        "sim_time": "Tiempo simulado",
+    },
+    "en": {
+        "particles": "Number of particles",
+        "flux_time": "Flux time",
+        "sim_time": "Simulation time",
+    },
+    "pt": {
+        "particles": "Número de partículas",
+        "flux_time": "Tempo de fluxo",
+        "sim_time": "Tempo simulado",
+    },
+    "fr": {
+        "particles": "Nombre de particules",
+        "flux_time": "Temps de flux",
+        "sim_time": "Temps simulé",
+    },
+}
+
+
+def _get_graph_info_texts(lang: str) -> dict:
+    return GRAPH_INFO_TEXTS.get(lang, GRAPH_INFO_TEXTS["es"])
+
+
+def _format_particle_count(value: int, lang: str) -> str:
+    formatted = f"{value:,}"
+
+    if lang == "en":
+        return formatted
+
+    return formatted.replace(",", ".")    
+
 
 def _build_full_meta(
     *,
@@ -91,34 +127,12 @@ def _build_full_meta(
     elapsed_s: float,
 ) -> dict:
     return {
-        "created_at": time.time(),
-        "tipo": "full",
-        "bundle": bundle.name,
-        "trial_dir": str(bundle.trial_dir),
-        "features": int(bundle.features),
-        "sampling_mode": "joint_2d",
-        "mu_encoding": mu_encoding,
-        "bx_uT": float(req.bx),
-        "bz_uT": float(req.bz),
-        "altura_m": float(req.altura),
-        "flux_part_m2_s": float(flux),
+        "height_m": float(req.altura),
+        "Bx_uT": float(req.bx),
+        "Bz_uT": float(req.bz),
         "duration_s": float(SIM_DURATION_SECONDS),
-        "area_m2": float(AREA_M2),
-        "rate_total_part_m2_s": float(rate_total),
-        "N_target": int(n_target_int),
-        "N_draw": int(n_draw),
-        "scale": float(scale),
-        "acceptance": float(acceptance),
-        "E_Y_MIN": float(bundle.cfg.get("y_min", E_Y_MIN)),
-        "E_Y_MAX": float(bundle.cfg.get("y_max", E_Y_MAX)),
-        "mu_min": float(bundle.cfg.get("mu_min", get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
-        "mu_max": float(bundle.cfg.get("mu_max", 1.0 - get_angle_eps_mu(bundle.stats, bundle.cfg, ANGLE_EPS_DEFAULT))),
-        "theta_plot_range_deg": [float(THETA_MIN_DEG), float(THETA_MAX_DEG)],
-        "phi_distribution": "uniform_deg_[0,360)",
-        "muon_mass_GeV": float(MUON_MASS_GEV),
-        "pz_sign_convention": float(PZ_SIGN),
-        "n_energy_below_muon_mass": int(n_below_mass),
-        "clip_info": clip_info,
+        "flux_part_m2_s": float(flux),
+        "N_muons": int(n_draw),
         "simulation_time_s": float(elapsed_s),
     }
 
@@ -222,29 +236,31 @@ def simulate_full_job(
     elapsed_s = time.perf_counter() - request_start_perf
     rate_total = n_target_int / SIM_DURATION_SECONDS
 
-    n_draw_fmt = f"{n_draw:,}".replace(",", ".")
+    lang = getattr(req, "lang", "es")
+    info_texts = _get_graph_info_texts(lang)
+    n_draw_fmt = _format_particle_count(n_draw, lang)
 
     subtitle = (
-        f"Número de partículas: {n_draw_fmt}\n"
-        f"Tiempo de flujo: {SIM_DURATION_SECONDS:g} s\n"
-        f"Tiempo simulado: {elapsed_s:.2f} s"
+        f"{info_texts['particles']}: {n_draw_fmt}\n"
+        f"{info_texts['flux_time']}: {SIM_DURATION_SECONDS:g} s\n"
+        f"{info_texts['sim_time']}: {elapsed_s:.2f} s"
     )
 
     save_energy_spectrum_plot(
         out_png=out_energy_png,
         E=energy_samples,
         scale=scale,
-        title="Espectro energético",
         subtitle=subtitle,
         stats=bundle.stats,
+        lang=lang,
     )
 
     save_angle_spectrum_plot(
         out_png=out_angle_png,
         theta_deg=theta_plot,
         scale=scale,
-        title="Espectro angular",
         subtitle=subtitle,
+        lang=lang,
     )
     n_below_mass = int(np.sum(energy_samples < MUON_MASS_GEV))
 

@@ -1,17 +1,8 @@
 <header class="navbar">
   <div class="navbar__content">
     <div class="navbar__left">
-      <div class="navbar__logos">
-        <img
-          src="assets/logo_UIS.png"
-          alt="Logo UIS"
-          class="navbar__logo navbar__logo--uis"
-        />
-      </div>
-
-      <span class="navbar__separator"></span>
-
-      <span class="navbar__brand">Generador global del flujo de muones</span>
+      <span class="navbar__separator" aria-hidden="true"></span>
+      <span class="navbar__brand">{{ i18n.t('app.title') }}</span>
     </div>
 
     <button
@@ -19,7 +10,7 @@
       class="navbar__menu-button"
       (click)="toggleMenu()"
       [attr.aria-expanded]="menuOpen"
-      aria-label="Abrir o cerrar menú de navegación"
+      [attr.aria-label]="i18n.t('nav.menu')"
     >
       <span></span>
       <span></span>
@@ -34,7 +25,7 @@
         class="tab"
         (click)="closeMenu()"
       >
-        Inicio
+        {{ i18n.t('nav.home') }}
       </a>
 
       <a
@@ -43,7 +34,7 @@
         class="tab"
         (click)="closeMenu()"
       >
-        Simulador
+        {{ i18n.t('nav.simulator') }}
       </a>
 
       <a
@@ -52,8 +43,24 @@
         class="tab"
         (click)="closeMenu()"
       >
-        Descripción
+        {{ i18n.t('nav.description') }}
       </a>
+
+      <div class="language-select-wrapper">
+        <span class="language-select-icon" aria-hidden="true">🌐</span>
+
+        <select
+          class="language-select"
+          [(ngModel)]="selectedLanguage"
+          aria-label="Language selector"
+        >
+          @for (language of i18n.languages; track language.code) {
+            <option [value]="language.code">
+              {{ language.label }}
+            </option>
+          }
+        </select>
+      </div>
     </nav>
   </div>
 </header>
@@ -63,5 +70,5 @@
 </main>
 
 <footer class="footer">
-  © 2025 Todos los derechos reservados
+  © 2025 {{ i18n.t('footer.rights') }}
 </footer>

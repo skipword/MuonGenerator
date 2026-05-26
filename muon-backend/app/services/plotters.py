@@ -20,6 +20,40 @@ plt.rcParams.update({
     "grid.linewidth": 0.9,
 })
 
+PLOT_TEXTS = {
+    "es": {
+        "energy_title": "Espectro energético",
+        "angle_title": "Espectro angular",
+        "energy_xlabel": "Energía (GeV)",
+        "angle_xlabel": r"Ángulo cenital ($\theta^\circ$)",
+        "ylabel": "part/(m²·s)",
+    },
+    "en": {
+        "energy_title": "Energy spectrum",
+        "angle_title": "Angular spectrum",
+        "energy_xlabel": "Energy (GeV)",
+        "angle_xlabel": r"Zenith angle ($\theta^\circ$)",
+        "ylabel": "part/(m²·s)",
+    },
+    "pt": {
+        "energy_title": "Espectro energético",
+        "angle_title": "Espectro angular",
+        "energy_xlabel": "Energia (GeV)",
+        "angle_xlabel": r"Ângulo zenital ($\theta^\circ$)",
+        "ylabel": "part/(m²·s)",
+    },
+    "fr": {
+        "energy_title": "Spectre énergétique",
+        "angle_title": "Spectre angulaire",
+        "energy_xlabel": "Énergie (GeV)",
+        "angle_xlabel": r"Angle zénithal ($\theta^\circ$)",
+        "ylabel": "part/(m²·s)",
+    },
+}
+
+
+def _get_plot_texts(lang: str) -> dict:
+    return PLOT_TEXTS.get(lang, PLOT_TEXTS["es"])
 
 def _compute_rate_per_bin(counts: np.ndarray, scale: float) -> np.ndarray:
     """
@@ -124,9 +158,10 @@ def save_energy_spectrum_plot(
     out_png: str | Path,
     E,
     scale=1.0,
-    title="Espectro energético",
+    title: str | None = None,
     subtitle: str | None = None,
     stats=None,
+    lang: str = "es",
 ):
     """
     Guarda el espectro energético.
@@ -144,9 +179,11 @@ def save_energy_spectrum_plot(
     ax.set_yscale("log")
     ax.set_xlim(edges[0], edges[-1])
 
-    ax.set_xlabel("Energía (GeV)")
-    ax.set_ylabel("part/(m²·s)")
-    ax.set_title(title, pad=10)
+    texts = _get_plot_texts(lang)
+
+    ax.set_xlabel(texts["energy_xlabel"])
+    ax.set_ylabel(texts["ylabel"])
+    ax.set_title(title or texts["energy_title"], pad=10)
 
     _style_axes(ax, use_minor_ticks=True)
     _draw_info_box(ax, subtitle)
@@ -160,8 +197,9 @@ def save_angle_spectrum_plot(
     out_png: str | Path,
     theta_deg,
     scale=1.0,
-    title="Espectro angular",
+    title: str | None = None,
     subtitle: str | None = None,
+    lang: str = "es",
 ):
     """
     Guarda el espectro angular.
@@ -177,9 +215,11 @@ def save_angle_spectrum_plot(
 
     ax.set_xlim(edges[0], edges[-1])
 
-    ax.set_xlabel(r"Ángulo cenital ($\theta^\circ$)")
-    ax.set_ylabel("part/(m²·s)")
-    ax.set_title(title, pad=10)
+    texts = _get_plot_texts(lang)
+
+    ax.set_xlabel(texts["angle_xlabel"])
+    ax.set_ylabel(texts["ylabel"])
+    ax.set_title(title or texts["angle_title"], pad=10)
 
     _style_axes(ax, use_minor_ticks=True)
     _draw_info_box(ax, subtitle)

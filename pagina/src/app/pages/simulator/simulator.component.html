@@ -1,18 +1,21 @@
 <section class="sim-layout">
   <div class="sim-layout__left">
-    <h1 class="sim-title">Generador global del flujo de muones</h1>
+    <h1 class="sim-title">{{ i18n.t('sim.title') }}</h1>
     <p class="sim-subtitle">
-      Busque una ciudad para autocompletar latitud y longitud. La altura, B<sub>x</sub> y B<sub>z</sub>
-      pueden ajustarse manualmente antes de ejecutar la simulación.
+      {{ i18n.t('sim.intro.beforeFields') }}
+      B<sub>x</sub>
+      {{ i18n.t('common.and') }}
+      B<sub>z</sub>
+      {{ i18n.t('sim.intro.afterFields') }}
     </p>
 
     <form class="sim-form" (ngSubmit)="onGenerate()">
       <div class="form-field">
-        <label for="city">Ciudad</label>
+        <label for="city">{{ i18n.t('sim.city') }}</label>
         <input
           id="city"
           type="text"
-          placeholder="ej., Bucaramanga"
+          [placeholder]="i18n.t('sim.placeholder.city')"
           [(ngModel)]="city"
           name="city"
           (keydown.enter)="onResolveCity(); $event.preventDefault()"
@@ -20,11 +23,11 @@
       </div>
 
       <div class="form-field">
-        <label for="country">País (opcional)</label>
+        <label for="country">{{ i18n.t('sim.country') }}</label>
         <input
           id="country"
           type="text"
-          placeholder="ej., Colombia"
+          [placeholder]="i18n.t('sim.placeholder.country')"
           [(ngModel)]="country"
           name="country"
           (keydown.enter)="onResolveCity(); $event.preventDefault()"
@@ -38,23 +41,23 @@
           [disabled]="!canResolveCity"
           (click)="onResolveCity()"
         >
-          {{ isResolvingCity ? 'Buscando...' : 'Buscar ciudad' }}
+          {{ isResolvingCity ? i18n.t('sim.searching') : i18n.t('sim.searchCity') }}
         </button>
       </div>
 
       <p class="resolved-place" *ngIf="resolvedDisplayName">
-        <strong>Lugar encontrado:</strong> {{ resolvedDisplayName }}
+        <strong>{{ i18n.t('sim.placeFound') }}</strong> {{ resolvedDisplayName }}
       </p>
 
       <p class="field-hint" [innerHTML]="locationStatus"></p>
 
       <div class="form-field">
-        <label for="lat">Latitud</label>
+        <label for="lat">{{ i18n.t('sim.latitude') }}</label>
         <input
           id="lat"
           type="number"
           step="any"
-          placeholder="ej., 7.12539"
+          [placeholder]="i18n.t('sim.placeholder.lat')"
           [(ngModel)]="lat"
           name="lat"
           (blur)="maybeRecomputeField()"
@@ -62,12 +65,12 @@
       </div>
 
       <div class="form-field">
-        <label for="lon">Longitud</label>
+        <label for="lon">{{ i18n.t('sim.longitude') }}</label>
         <input
           id="lon"
           type="number"
           step="any"
-          placeholder="ej., -73.1198"
+          [placeholder]="i18n.t('sim.placeholder.lon')"
           [(ngModel)]="lon"
           name="lon"
           (blur)="maybeRecomputeField()"
@@ -75,17 +78,17 @@
       </div>
 
       <div class="form-field">
-        <label for="altura">Altura (m s.n.m.)</label>
+        <label for="altura">{{ i18n.t('sim.height') }}</label>
         <input
           id="altura"
           type="number"
-          placeholder="ej., 956"
+          [placeholder]="i18n.t('sim.placeholder.height')"
           [(ngModel)]="altura"
           name="altura"
           (blur)="maybeRecomputeField()"
         />
         <small class="field-hint">
-          Puede usar una altura aproximada o ajustarla manualmente con un valor más específico.
+          {{ i18n.t('sim.heightHelp') }}
         </small>
       </div>
 
@@ -96,7 +99,11 @@
           [disabled]="!canComputeField"
           (click)="onComputeField()"
         >
-          {{ isComputingField ? 'Calculando...' : 'Actualizar Bx y Bz' }}
+          @if (isComputingField) {
+            {{ i18n.t('sim.computingField') }}
+          } @else {
+            {{ i18n.t('sim.updateField') }} B<sub>x</sub> {{ i18n.t('common.and') }} B<sub>z</sub>
+          }
         </button>
       </div>
 
@@ -106,7 +113,7 @@
           id="bx"
           type="number"
           step="any"
-          placeholder="Se completa automáticamente"
+          [placeholder]="i18n.t('sim.placeholder.auto')"
           [(ngModel)]="bx"
           name="bx"
         />
@@ -118,7 +125,7 @@
           id="bz"
           type="number"
           step="any"
-          placeholder="Se completa automáticamente"
+          [placeholder]="i18n.t('sim.placeholder.auto')"
           [(ngModel)]="bz"
           name="bz"
         />
@@ -129,7 +136,7 @@
         class="btn btn--primary"
         [disabled]="!isFormValid || isSimulating || isResolvingCity || isComputingField"
       >
-        {{ isSimulating ? 'Simulando...' : 'Generar espectro' }}
+        {{ isSimulating ? i18n.t('sim.simulating') : i18n.t('sim.generate') }}
       </button>
     </form>
   </div>
@@ -142,7 +149,7 @@
 
       <ng-container *ngIf="isSimulating">
         <div class="spinner"></div>
-        <p>Simulación ejecutándose...</p>
+        <p>{{ i18n.t('sim.running') }}</p>
       </ng-container>
 
       <ng-container *ngIf="!isSimulating && simulationDone">
@@ -152,7 +159,7 @@
           <div class="results-viewer__content">
             <img
               [src]="currentImageUrl"
-              alt="Simulation result"
+              [alt]="i18n.t('sim.imageAlt')"
               class="results-image"
             />
 
@@ -185,32 +192,32 @@
           </div>
         </div>
         <p class="results-total-time" *ngIf="totalDisplayTimeSec !== null">
-          Tiempo total de generación y visualización: {{ formattedTotalDisplayTime }} s
+          {{ i18n.t('sim.totalTime') }} {{ formattedTotalDisplayTime }} s
         </p>
       </ng-container>
     </div>
 
     <section class="download-card">
-      <h2 class="download-title">Descarga los resultados</h2>
+      <h2 class="download-title">{{ i18n.t('sim.downloadTitle') }}</h2>
       <p class="download-subtitle">
-        Exporta la simulación en diferentes formatos
+        {{ i18n.t('sim.downloadSubtitle') }}
       </p>
 
       <div class="form-field">
-        <label for="formato">Formato de archivo</label>
+        <label for="formato">{{ i18n.t('sim.fileFormat') }}</label>
         <select
           id="formato"
           [(ngModel)]="formato"
           name="formato"
         >
-          <option value="" disabled>Selecciona un formato</option>
+          <option value="" disabled>{{ i18n.t('sim.selectFormat') }}</option>
           <option value="csv">CSV</option>
           <option value="shw">SHW</option>
         </select>
       </div>
 
       <p class="download-hint">
-        Selecciona el tipo de archivo a descargar.
+        {{ i18n.t('sim.downloadHelp') }}
       </p>
 
       <button
@@ -219,7 +226,7 @@
         [disabled]="!simulationDone || !formato"
         (click)="onDownload()"
       >
-        Descargar
+        {{ i18n.t('sim.download') }}
       </button>
     </section>
   </div>

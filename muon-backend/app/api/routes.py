@@ -41,6 +41,32 @@ from ..services.storage import cleanup_old_runs
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+RESPONSE_TEXTS = {
+    "es": {
+        "done": "Simulación terminada.",
+        "energy_label": "Espectro de energía",
+        "angle_label": "Espectro angular",
+    },
+    "en": {
+        "done": "Simulation finished.",
+        "energy_label": "Energy spectrum",
+        "angle_label": "Angular spectrum",
+    },
+    "pt": {
+        "done": "Simulação concluída.",
+        "energy_label": "Espectro de energia",
+        "angle_label": "Espectro angular",
+    },
+    "fr": {
+        "done": "Simulation terminée.",
+        "energy_label": "Spectre d’énergie",
+        "angle_label": "Spectre angulaire",
+    },
+}
+
+
+def _get_response_texts(lang: str) -> dict:
+    return RESPONSE_TEXTS.get(lang, RESPONSE_TEXTS["es"])
 
 @router.get("/health")
 def health(request: Request):
@@ -133,15 +159,17 @@ async def simulate_full(
     total_request_elapsed_s = time.perf_counter() - request_start_perf
     base = str(request.base_url).rstrip("/")
 
+    texts = _get_response_texts(req.lang)
+
     return SimFullResponse(
-        message="Simulación terminada.",
+        message=texts["done"],
         image_urls=[
             f"{base}/result/{run_id}/energy.png",
             f"{base}/result/{run_id}/angle.png",
         ],
         image_labels=[
-            "Espectro de energía",
-            "Espectro angular",
+            texts["energy_label"],
+            texts["angle_label"],
         ],
         download_csv_url=f"{base}/download/{run_id}/results.csv",
         download_shw_url=f"{base}/download/{run_id}/results_shw.zip",

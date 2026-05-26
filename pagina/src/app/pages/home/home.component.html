@@ -1,8 +1,7 @@
 <section class="hero">
-  <h1 class="hero__title">Generador global del flujo de muones</h1>
+  <h1 class="hero__title">{{ i18n.t('home.title') }}</h1>
   <p class="hero__subtitle">
-    Estime y visualice la distribución de muones cósmicos
-    para cualquier ubicación del planeta.
+    {{ i18n.t('home.subtitle') }}
   </p>
 
   <div class="hero__actions">
@@ -11,7 +10,7 @@
       class="btn btn--primary"
       routerLink="/simulador"
     >
-      Comenzar simulación
+      {{ i18n.t('home.start') }}
     </button>
 
     <button
@@ -19,57 +18,70 @@
       class="btn btn--secondary"
       routerLink="/descripcion"
     >
-      Ver descripción
+      {{ i18n.t('home.description') }}
     </button>
   </div>
 </section>
 
 <section class="features">
   <article class="feature-card">
-    <div class="feature-card__icon">
+    <div class="feature-card__icon" aria-hidden="true">
       <span class="material-symbols-rounded">smart_toy</span>
     </div>
-    <h3 class="feature-card__title">IA</h3>
+    <h3 class="feature-card__title">{{ i18n.t('home.ai.title') }}</h3>
     <p class="feature-card__text">
-      Basado en CNFs entrenados con simulaciones ARTI/CORSIKA
+      {{ i18n.t('home.ai.text') }}
     </p>
   </article>
 
   <article class="feature-card">
-    <div class="feature-card__icon">
-      <span class="material-symbols-rounded">bolt</span>
+    <div class="feature-card__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d="M13.4 2.3a1 1 0 0 1 .58 1.1L12.9 9H18a1 1 0 0 1 .78 1.63l-8 10a1 1 0 0 1-1.76-.8L10.1 14H5a1 1 0 0 1-.78-1.63l8-10a1 1 0 0 1 1.18-.07Z" />
+      </svg>
     </div>
-    <h3 class="feature-card__title">Resultados instantáneos</h3>
+    <h3 class="feature-card__title">{{ i18n.t('home.instant.title') }}</h3>
     <p class="feature-card__text">
-      Genere distribuciones angulares y energéticas en segundos
+      {{ i18n.t('home.instant.text') }}
     </p>
   </article>
 
   <article class="feature-card">
-    <div class="feature-card__icon">
-      <span class="material-symbols-rounded">download</span>
+    <div class="feature-card__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 4a1 1 0 0 1-1.4 0l-4-4a1 1 0 1 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1ZM5 18a1 1 0 0 1 1 1v1h12v-1a1 1 0 1 1 2 0v2a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1Z" />
+      </svg>
     </div>
-    <h3 class="feature-card__title">Exportación flexible</h3>
+    <h3 class="feature-card__title">{{ i18n.t('home.export.title') }}</h3>
     <p class="feature-card__text">
-      Descargue resultados en formato CSV o SHW para análisis posterior
+      {{ i18n.t('home.export.text') }}
     </p>
   </article>
 </section>
 
-<section class="partners-strip" aria-label="Instituciones participantes">
-  <img
-    src="assets/logo_Lidera.png"
-    alt="Logo Lidera"
-    class="partners-strip__logo partners-strip__logo--lidera"
-  />
-  <img
-    src="assets/logo_halley.png"
-    alt="Logo Halley"
-    class="partners-strip__logo partners-strip__logo--halley"
-  />
-  <img
-    src="assets/logo_Lago.png"
-    alt="Logo LAGO"
-    class="partners-strip__logo partners-strip__logo--lago"
-  />
-</section>
+  <section class="partners-strip" aria-label="Instituciones participantes">
+    
+    <img
+      src="assets/logo_Lidera.png"
+      alt="Logo LIDeRA"
+      class="partners-strip__logo partners-strip__logo--lidera"
+    />
+
+    <img
+      src="assets/logo_UIS.png"
+      alt="Logo UIS"
+      class="partners-strip__logo partners-strip__logo--uis"
+    />
+
+    <img
+      src="assets/logo_halley.png"
+      alt="Logo Halley"
+      class="partners-strip__logo partners-strip__logo--halley"
+    />
+
+    <img
+      src="assets/logo_Lago.png"
+      alt="Logo LAGO"
+      class="partners-strip__logo partners-strip__logo--lago"
+    />
+  </section>

@@ -1,44 +1,46 @@
 <section class="desc-layout">
   <!-- Parámetros de entrada -->
   <article class="desc-card">
-    <h1 class="desc-card__title">Parámetros de entrada</h1>
+    <h1 class="desc-card__title">{{ i18n.t('desc.inputParams') }}</h1>
 
     <div class="desc-block">
-      <h2 class="desc-block__subtitle">B<sub>x</sub> y B<sub>z</sub></h2>
+      <h2 class="desc-block__subtitle">
+        B<sub>x</sub> {{ i18n.t('common.and') }} B<sub>z</sub>
+      </h2>
       <p class="desc-block__text">
-         Componentes del campo magnético terrestre en el sitio de observación. 
-         bx es la componente horizontal y bz la componente vertical.
+        {{ i18n.t('desc.fieldText.before') }}
+        B<sub>x</sub>
+        {{ i18n.t('desc.fieldText.middle') }}
+        B<sub>z</sub>
+        {{ i18n.t('desc.fieldText.after') }}
       </p>
     </div>
 
     <div class="desc-block">
-      <h2 class="desc-block__subtitle">Altura sobre el nivel del mar</h2>
+      <h2 class="desc-block__subtitle">{{ i18n.t('desc.heightTitle') }}</h2>
       <p class="desc-block__text">
-        La altitud afecta significativamente la distribución de muones debido
-        a la menor cantidad de atmósfera que las partículas deben atravesar a
-        mayores alturas.
+        {{ i18n.t('desc.heightText') }}
       </p>
     </div>
   </article>
 
   <!-- Resultados generados -->
   <article class="desc-card">
-    <h1 class="desc-card__title">Resultados generados</h1>
+    <h1 class="desc-card__title">{{ i18n.t('desc.results') }}</h1>
 
     <div class="desc-block">
-      <h2 class="desc-block__subtitle">Distribución de energía</h2>
+      <h2 class="desc-block__subtitle">{{ i18n.t('desc.energyTitle') }}</h2>
       <p class="desc-block__text">
-        Representa el espectro de energía de los muones en escala logarítmica
-        (log10(E)). Permite analizar la contribución de diferentes rangos de
-        energía.
+        {{ i18n.t('desc.energyText.beforeLog') }}
+        (log<sub>10</sub>(E)){{ i18n.t('desc.energyText.afterLog') }}
       </p>
     </div>
 
     <div class="desc-block">
-      <h2 class="desc-block__subtitle">Distribución del ángulo</h2>
+      <h2 class="desc-block__subtitle">{{ i18n.t('desc.angleTitle') }}</h2>
       <p class="desc-block__text">
-        Muestra cómo varía la intensidad de muones en función del ángulo
-        cenital (θ).
+        {{ i18n.t('desc.angleText.beforeTheta') }}
+        (θ){{ i18n.t('desc.angleText.afterTheta') }}
       </p>
     </div>
   </article>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, finalize } from 'rxjs';
+import { BehaviorSubject, Observable, finalize } from 'rxjs';
 
 import {
   BFieldResponse,
@@ -7,6 +7,7 @@ import {
   SimResponse,
   SimulatorApiService,
 } from './simulator-api.service';
+import { LanguageService } from '../i18n/language.service';
 
 export type DownloadFormat = '' | 'csv' | 'shw';
 
@@ -76,49 +77,19 @@ type PersistedSimulatorState = Pick<
 export class SimulatorStateService {
   private readonly STORAGE_KEY = 'simulator-state';
 
-  private readonly initialState: SimulatorState = {
-    city: '',
-    country: '',
+  private readonly initialState: SimulatorState;
+  private readonly stateSubject: BehaviorSubject<SimulatorState>;
 
-    lat: null,
-    lon: null,
-    altura: null,
+  readonly state$: Observable<SimulatorState>;
 
-    bx: null,
-    bz: null,
-
-    formato: '',
-
-    mensajeResultado:
-      'Complete el <strong>formulario de la izquierda</strong> y luego haga clic en "Generar espectro" para ver los resultados.',
-    locationStatus:
-      'Busque una ciudad para autocompletar latitud y longitud. Luego ajuste la altura y actualice B<sub>x</sub> y B<sub>z</sub>.',
-    resolvedDisplayName: '',
-
-    isResolvingCity: false,
-    isComputingField: false,
-    isSimulating: false,
-    simulationDone: false,
-
-    resultImageUrls: [],
-    resultImageLabels: [],
-    currentImageIndex: 0,
-
-    downloadUrls: {
-      csv: '',
-      shw: '',
-    },
-
-    runId: '',
-  };
-
-  private readonly stateSubject = new BehaviorSubject<SimulatorState>(
-    this.loadInitialState()
-  );
-
-  readonly state$ = this.stateSubject.asObservable();
-
-  constructor(private readonly simulatorApi: SimulatorApiService) {}
+  constructor(
+    private readonly simulatorApi: SimulatorApiService,
+    private readonly i18n: LanguageService
+  ) {
+    this.initialState = this.createInitialState();
+    this.stateSubject = new BehaviorSubject<SimulatorState>(this.loadInitialState());
+    this.state$ = this.stateSubject.asObservable();
+  }
 
   get snapshot(): SimulatorState {
     return this.stateSubject.value;
@@ -129,8 +100,9 @@ export class SimulatorStateService {
   }
 
   resetState(): void {
-    this.stateSubject.next(this.initialState);
-    this.persistState(this.initialState);
+    const initialState = this.createInitialState();
+    this.stateSubject.next(initialState);
+    this.persistState(initialState);
   }
 
   resolveCity(): void {
@@ -142,7 +114,7 @@ export class SimulatorStateService {
 
     this.patchState({
       isResolvingCity: true,
-      locationStatus: 'Buscando ciudad...',
+      locationStatus: this.i18n.t('sim.status.searchingCity'),
     });
 
     const payload = {
@@ -167,22 +139,20 @@ export class SimulatorStateService {
 
           if (altura !== null) {
             this.patchState({
-              locationStatus:
-                'Ciudad encontrada. Actualizando automáticamente B<sub>x</sub> y B<sub>z</sub>...'
+              locationStatus: this.i18n.t('sim.status.cityFoundUpdating'),
             });
             this.computeField(true);
             return;
           }
 
           this.patchState({
-            locationStatus:
-              'Ciudad encontrada. Ahora ingrese o ajuste la altura y luego actualice B<sub>x</sub>/B<sub>z</sub>.'
+            locationStatus: this.i18n.t('sim.status.cityFoundNeedHeight'),
           });
         },
         error: () => {
           this.patchState({
             resolvedDisplayName: '',
-            locationStatus: 'No se pudo encontrar la ciudad indicada.',
+            locationStatus: this.i18n.t('sim.status.cityNotFound'),
           });
         },
       });
@@ -197,7 +167,7 @@ export class SimulatorStateService {
 
     this.patchState({
       isComputingField: true,
-      ...(silent ? {} : { locationStatus: 'Calculando B<sub>x</sub> y B<sub>z</sub>...' }),
+      ...(silent ? {} : { locationStatus: this.i18n.t('sim.status.computingField') }),
     });
 
     const payload = { lat, lon, altura };
@@ -214,14 +184,12 @@ export class SimulatorStateService {
           this.patchState({
             bx: res.bx,
             bz: res.bz,
-            locationStatus:
-              'B<sub>x</sub> y B<sub>z</sub> actualizados. Puede ajustarlos manualmente si necesita un valor más específico.',
+            locationStatus: this.i18n.t('sim.status.fieldUpdated'),
           });
         },
         error: (err) => {
           this.patchState({
-            locationStatus:
-              err?.error?.detail ?? 'No se pudo calcular Bx y Bz.',
+            locationStatus: err?.error?.detail ?? this.i18n.t('sim.status.fieldError'),
           });
         },
       });
@@ -234,7 +202,12 @@ export class SimulatorStateService {
       return;
     }
 
-    const payload = { bx, bz, altura };
+    const payload = {
+      bx,
+      bz,
+      altura,
+      lang: this.i18n.currentLanguage(),
+    };
 
     this.patchState({
       isSimulating: true,
@@ -247,8 +220,7 @@ export class SimulatorStateService {
         shw: '',
       },
       runId: '',
-      mensajeResultado:
-        'Ejecutando simulación… esto puede tardar unos segundos.',
+      mensajeResultado: this.i18n.t('sim.status.simulationStarting'),
     });
 
     this.simulatorApi
@@ -262,7 +234,7 @@ export class SimulatorStateService {
         next: (res: SimResponse) => {
           this.patchState({
             simulationDone: true,
-            mensajeResultado: res.message,
+            mensajeResultado: this.i18n.t('sim.status.simulationDone'),
             resultImageUrls: this.addCacheBusting(res.image_urls ?? []),
             resultImageLabels: res.image_labels ?? [],
             downloadUrls: {
@@ -277,8 +249,7 @@ export class SimulatorStateService {
           this.patchState({
             simulationDone: false,
             mensajeResultado:
-              err?.error?.detail ??
-              'No se pudo completar la simulación (backend no disponible o error).',
+              err?.error?.detail ?? this.i18n.t('sim.status.simulationError'),
           });
         },
       });
@@ -328,6 +299,42 @@ export class SimulatorStateService {
 
     this.stateSubject.next(nextState);
     this.persistState(nextState);
+  }
+
+  private createInitialState(): SimulatorState {
+    return {
+      city: '',
+      country: '',
+
+      lat: null,
+      lon: null,
+      altura: null,
+
+      bx: null,
+      bz: null,
+
+      formato: '',
+
+      mensajeResultado: this.i18n.t('sim.status.initialResult'),
+      locationStatus: this.i18n.t('sim.status.initialLocation'),
+      resolvedDisplayName: '',
+
+      isResolvingCity: false,
+      isComputingField: false,
+      isSimulating: false,
+      simulationDone: false,
+
+      resultImageUrls: [],
+      resultImageLabels: [],
+      currentImageIndex: 0,
+
+      downloadUrls: {
+        csv: '',
+        shw: '',
+      },
+
+      runId: '',
+    };
   }
 
   private loadInitialState(): SimulatorState {
