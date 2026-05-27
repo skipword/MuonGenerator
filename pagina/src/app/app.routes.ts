@@ -8,6 +8,7 @@ export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'simulador', component: SimulatorComponent },
   { path: 'descripcion', component: DescriptionComponent },
-  { path: 'descargas', component: DownloadsComponent },
+  { path: 'acerca', component: DownloadsComponent },
+  { path: 'descargas', redirectTo: 'acerca' },
   { path: '**', redirectTo: '' },
 ];

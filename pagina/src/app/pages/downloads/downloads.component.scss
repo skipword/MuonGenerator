@@ -1,132 +1,312 @@
-.downloads-layout {
+.about-layout {
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
-.downloads-card {
+.about-hero {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(79, 70, 229, 0.18), transparent 34%),
+    linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 24px;
+  padding: 34px 36px;
+  box-shadow:
+    0 20px 45px rgba(15, 23, 42, 0.08),
+    0 0 0 1px #e5e7eb;
+}
+
+.about-kicker,
+.about-card__eyebrow {
+  margin: 0 0 8px;
+  color: #4f46e5;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about-hero__title {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+}
+
+.about-hero__text {
+  max-width: 760px;
+  margin: 16px 0 0;
+  color: #475569;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.about-grid--main {
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.55fr);
+}
+
+.about-card,
+.about-footer-card {
+  min-width: 0;
   background: #ffffff;
-  border-radius: 18px;
-  padding: 20px 24px 24px;
-  box-shadow: 0 0 0 1px #e5e7eb;
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow:
+    0 14px 30px rgba(15, 23, 42, 0.06),
+    0 0 0 1px #e5e7eb;
 }
 
-.downloads-card__title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 4px;
-  color: #111827;
+.about-card--large {
+  padding: 28px;
 }
 
-.downloads-card__subtitle {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #6b7280;
-  margin: 0 0 16px;
+.about-card--contact {
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(30, 41, 59, 0.96)),
+    #0f172a;
+  color: #e5e7eb;
 }
 
-.downloads-section + .downloads-section {
-  margin-top: 16px;
+.about-card--contact .about-card__eyebrow {
+  color: #a5b4fc;
 }
 
-.downloads-section__title {
-  font-size: 15px;
-  font-weight: 600;
-  margin: 0 0 2px;
-  color: #111827;
+.about-card--contact .about-card__title {
+  color: #ffffff;
 }
 
-.downloads-section__subtitle {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #6b7280;
-  margin: 0 0 12px;
-}
-
-.download-item {
+.about-card__header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-top: 1px solid #e5e7eb;
+  justify-content: space-between;
+  gap: 22px;
+  margin-bottom: 18px;
 }
 
-.download-item:first-of-type {
+.about-card__header--compact {
+  margin-bottom: 14px;
+}
+
+.about-card__title {
+  margin: 0;
+  color: #111827;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.about-card__text {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.about-card__text--highlight-intro {
+  margin-top: 20px;
+  margin-bottom: -4px;
+  color: #334155;
+  font-weight: 700;
+}
+
+.about-card__text + .about-card__text {
+  margin-top: 14px;
+}
+
+.about-card__logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.about-card__logo--lidera {
+  max-height: 72px;
+  max-width: 160px;
+}
+
+.about-card__logo--lago {
+  max-height: 74px;
+  max-width: 120px;
+}
+.about-card__logo--cyted {
+  max-height: 72px;
+  max-width: 150px;
+}
+
+.highlight-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+
+.highlight-item {
+  padding: 18px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.highlight-item h3 {
+  margin: 0 0 4px;
+  color: #111827;
+  font-size: 0.98rem;
+  font-weight: 700;
+}
+
+.highlight-item p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.contact-item {
+  padding-top: 16px;
+  border-top: 1px solid rgba(226, 232, 240, 0.18);
+}
+
+.contact-item:first-child {
+  padding-top: 0;
   border-top: none;
 }
 
-.download-item__icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
-  background: #f3f4f6;
-  display: flex;
+.contact-item__label {
+  display: block;
+  margin-bottom: 5px;
+  color: #a5b4fc;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.contact-item__value {
+  display: block;
+  color: #f8fafc;
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.contact-note {
+  margin: 22px 0 0;
+  color: #cbd5e1;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.about-footer-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.35fr) minmax(0, 1fr);
   align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
+  gap: 24px;
+  background:
+    linear-gradient(135deg, rgba(79, 70, 229, 0.08), rgba(14, 165, 233, 0.08)),
+    #ffffff;
 }
 
-.download-item__info {
-  flex: 1;
-  min-width: 0;
-}
-
-.download-item__title {
-  font-size: 14px;
-  font-weight: 600;
-  margin: 0 0 2px;
-  color: #111827;
-}
-
-.download-item__desc {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #6b7280;
+.about-footer-card h2 {
   margin: 0;
-}
-
-.btn {
-  border-radius: 999px;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  border: 1px solid transparent;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.btn--secondary {
-  background: #ffffff;
   color: #111827;
-  border-color: #d1d5db;
+  font-size: 1.3rem;
 }
 
-@media (max-width: 900px) {
-  .downloads-card {
-    padding: 18px 18px 20px;
+.about-footer-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+@media (max-width: 980px) {
+  .about-hero,
+  .about-grid,
+  .about-grid--main,
+  .about-footer-card {
+    grid-template-columns: 1fr;
   }
 
-  .download-item {
+}
+@media (max-width: 760px) {
+  .about-hero {
+    padding: 26px 22px;
+    border-radius: 20px;
+  }
+
+  .about-card,
+  .about-card--large,
+  .about-footer-card {
+    padding: 22px;
+    border-radius: 20px;
+  }
+
+  .about-card__header {
     align-items: flex-start;
-    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .highlight-list {
+    grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 640px) {
-  .downloads-card {
-    padding: 16px 14px 18px;
+@media (max-width: 520px) {
+  .about-layout {
+    gap: 18px;
   }
 
-  .download-item {
-    display: grid;
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 10px 12px;
+  .about-hero {
+    padding: 22px 18px;
   }
 
-  .download-item .btn {
-    grid-column: 1 / -1;
-    width: 100%;
+  .about-card,
+  .about-card--large,
+  .about-footer-card {
+    padding: 18px;
   }
+
+  .about-hero__text,
+  .about-card__text,
+  .about-footer-card p {
+    font-size: 0.95rem;
+  }
+}
+
+.contact-item__value a {
+  color: #ffffff;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.contact-item__value a:hover {
+  color: #c7d2fe;
+  border-color: #c7d2fe;
+}
+
+.contact-item__value--authors {
+  line-height: 1.75;
 }

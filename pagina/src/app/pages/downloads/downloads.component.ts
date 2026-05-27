@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { LanguageService } from '../../i18n/language.service';
 
 @Component({
   selector: 'app-downloads',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './downloads.component.scss'
 })
 export class DownloadsComponent {
-
+  readonly i18n = inject(LanguageService);
 }

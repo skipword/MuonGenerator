@@ -38,6 +38,15 @@
       </a>
 
       <a
+        routerLink="/acerca"
+        routerLinkActive="tab--active"
+        class="tab"
+        (click)="closeMenu()"
+      >
+        {{ i18n.t('nav.about') }}
+      </a>      
+
+      <a
         routerLink="/descripcion"
         routerLinkActive="tab--active"
         class="tab"
