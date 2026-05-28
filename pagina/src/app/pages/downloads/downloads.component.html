@@ -31,15 +31,30 @@
         {{ i18n.t('about.lidera.text2') }}
       </p>
 
-      <div class="highlight-list">
+      <div class="highlight-list highlight-list--areas">
         <article class="highlight-item">
-          <h3>{{ i18n.t('about.mute.title') }}</h3>
-          <p>{{ i18n.t('about.mute.short') }}</p>
+          <h3>{{ i18n.t('about.area.spaceWeather.title') }}</h3>
+          <p>{{ i18n.t('about.area.placeholder') }}</p>
         </article>
 
         <article class="highlight-item">
-          <h3>{{ i18n.t('about.arti.title') }}</h3>
-          <p>{{ i18n.t('about.arti.short') }}</p>
+          <h3>{{ i18n.t('about.area.muography.title') }}</h3>
+          <p>{{ i18n.t('about.area.placeholder') }}</p>
+        </article>
+
+        <article class="highlight-item">
+          <h3>{{ i18n.t('about.area.soilMoisture.title') }}</h3>
+          <p>{{ i18n.t('about.area.placeholder') }}</p>
+        </article>
+
+        <article class="highlight-item">
+          <h3>{{ i18n.t('about.area.instrumentation.title') }}</h3>
+          <p>{{ i18n.t('about.area.placeholder') }}</p>
+        </article>
+
+        <article class="highlight-item">
+          <h3>{{ i18n.t('about.area.hpc.title') }}</h3>
+          <p>{{ i18n.t('about.area.placeholder') }}</p>
         </article>
       </div>
     </article>
@@ -55,15 +70,7 @@
             {{ i18n.t('about.contact.locationValue') }}
           </span>
         </div>
-
-        <div class="contact-item">
-          <span class="contact-item__label">{{ i18n.t('about.contact.emailLabel') }}</span>
-          <span class="contact-item__value">
-            <a href="mailto:cristian.orduz@correo.uis.edu.co">
-              Correo del lidera o de los profes diria yo
-            </a>
-          </span>
-        </div>
+      
 
         <div class="contact-item">
           <span class="contact-item__label">{{ i18n.t('about.contact.githubLabel') }}</span>
@@ -80,13 +87,43 @@
 
         <div class="contact-item">
           <span class="contact-item__label">{{ i18n.t('about.contact.authorsLabel') }}</span>
-          <span class="contact-item__value contact-item__value--authors">
-            Cristian Orduz-Carvajal<br />
-            Jhon Almanzar-Quintero<br />
-            Rafael Martínez-Rivero<br />
-            Christian Sarmiento-Cano<br />
-            Luis Núñez-Villavicencio
-          </span>
+
+          <div class="contact-authors">
+            <div class="contact-author">
+              <span class="contact-author__name">Cristian Orduz-Carvajal</span>
+              <a href="mailto:orduzcarvajal.cristian2017@gmail.com">
+                orduzcarvajal.cristian2017&#64;gmail.com
+              </a>
+            </div>
+
+            <div class="contact-author">
+              <span class="contact-author__name">Jhon Almanzar-Quintero</span>
+              <a href="mailto:jhonalmanzarq@gmail.com">
+                jhonalmanzarq&#64;gmail.com
+              </a>
+            </div>
+
+            <div class="contact-author">
+              <span class="contact-author__name">Rafael Martínez-Rivero</span>
+              <a href="mailto:rafael2248058@correo.uis.edu.co">
+                rafael2248058&#64;correo.uis.edu.co
+              </a>
+            </div>
+
+            <div class="contact-author">
+              <span class="contact-author__name">Christian Sarmiento-Cano</span>
+              <a href="mailto:csarmiento32@unab.edu.co">
+                csarmiento32&#64;unab.edu.co
+              </a>
+            </div>
+
+            <div class="contact-author">
+              <span class="contact-author__name">Luis Núñez-Villavicencio</span>
+                <a href="mailto:lnunez@uis.edu.co">
+                lnunez&#64;uis.edu.co
+                </a>
+            </div>
+          </div>
         </div>
       </div>
     </aside>

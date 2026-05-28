@@ -133,6 +133,10 @@
   height: 78px;
 }
 
+.partners-strip__logo--unab {
+  height: 58px;
+}
+
 .partners-strip__logo--lago {
   height: 86px;
 }
@@ -157,6 +161,9 @@
   .partners-strip__logo--halley {
     height: 66px;
   }
+    .partners-strip__logo--unab,{
+      height: 48px;
+    }
 
   .partners-strip__logo--lago {
     height: 74px;
@@ -193,6 +200,9 @@
   .partners-strip__logo--lidera,
   .partners-strip__logo--halley {
     height: 56px;
+  }
+  .partners-strip__logo--unab,{
+    height: 40px;
   }
 
   .partners-strip__logo--lago {

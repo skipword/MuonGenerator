@@ -71,7 +71,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'sim.status.simulationError': 'No se pudo completar la simulación (backend no disponible o error).',
 
     'about.title': 'Acerca de nosotros',
-    'about.subtitle': 'Esta plataforma fue desarrollada como proyecto de grado de pregrado en ingeniería de sistemas, orientado al estudio, simulación y visualización del flujo de muones atmosféricos bajo distintas condiciones geográficas y geomagnéticas.',
+    'about.subtitle': 'Laboratorio interdisciplinario para el desarrollo de detectores de astropartículas.',
 
     'about.lidera.eyebrow': 'Laboratorio',
     'about.lidera.text1': 'El Laboratorio de Investigación en Radiación y Astropartículas desarrolla actividades académicas y científicas relacionadas con rayos cósmicos, radiación atmosférica, detectores de partículas y herramientas computacionales aplicadas a fenómenos astroparticulares.',
@@ -86,7 +86,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.eyebrow': 'Contacto',
     'about.contact.title': 'Información de contacto',
     'about.contact.locationLabel': 'Ubicación',
-    'about.contact.locationValue': 'Universidad Industrial de Santander, Bucaramanga, Santander, Colombia.',
+    'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'Correos',
     'about.contact.githubLabel': 'GitHub del proyecto',
     'about.contact.authorsLabel': 'Autores principales',
@@ -95,6 +95,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.cyted.text': 'CYTED promueve la cooperación científica, tecnológica y de innovación entre países iberoamericanos mediante redes académicas y proyectos conjuntos orientados al desarrollo regional.',
     'about.lago.text': 'La colaboración LAGO es una red latinoamericana de detectores Cherenkov de agua distribuidos en sitios con diferentes altitudes y latitudes, dedicada al estudio de rayos cósmicos, clima espacial y radiación atmosférica a nivel del suelo.',
 
+    'about.area.placeholder': 'Por definir párrafo',
+    'about.area.spaceWeather.title': 'Clima espacial',
+    'about.area.muography.title': 'Muografía',
+    'about.area.soilMoisture.title': 'Humedad del suelo',
+    'about.area.instrumentation.title': 'Instrumentación y tecnologías de detección',
+    'about.area.hpc.title': 'Entornos de simulación de alto rendimiento',
     'about.platform.eyebrow': 'Plataforma web',
     'about.platform.title': 'Simulación y visualización',
     'about.platform.text': 'La plataforma integra condiciones geofísicas del sitio, modelos computacionales y visualización web para generar y analizar espectros de muones atmosféricos.',
@@ -184,7 +190,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'sim.status.simulationError': 'The simulation could not be completed (backend unavailable or error).',
 
     'about.title': 'About us',
-    'about.subtitle': 'This platform was developed as an undergraduate degree project in Systems Engineering, focused on studying, simulating and visualizing the atmospheric muon flux under different geographic and geomagnetic conditions.',
+    'about.subtitle': 'Interdisciplinary lab developing astroparticle detectors',
 
     'about.lidera.eyebrow': 'Laboratory',
     'about.lidera.text1': 'The Laboratory for Research in Radiation and Astroparticles develops academic and scientific activities related to cosmic rays, atmospheric radiation, particle detectors and computational tools applied to astroparticle phenomena.',
@@ -199,7 +205,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.eyebrow': 'Contact',
     'about.contact.title': 'Contact information',
     'about.contact.locationLabel': 'Location',
-    'about.contact.locationValue': 'Universidad Industrial de Santander, Bucaramanga, Santander, Colombia.',
+    'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'Emails',
     'about.contact.githubLabel': 'Project GitHub',
     'about.contact.authorsLabel': 'Main authors',
@@ -208,6 +214,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.cyted.text': 'CYTED promotes scientific, technological and innovation cooperation among Ibero-American countries through academic networks and joint projects aimed at regional development.',
     'about.lago.text': 'The LAGO Collaboration is a Latin American network of water Cherenkov detectors distributed across sites with different altitudes and latitudes, dedicated to the study of cosmic rays, space weather and atmospheric radiation at ground level.',
 
+    'about.area.placeholder': 'Paragraph to be defined',
+    'about.area.spaceWeather.title': 'Space Weather',
+    'about.area.muography.title': 'Muography',
+    'about.area.soilMoisture.title': 'Soil Moisture',
+    'about.area.instrumentation.title': 'Instrumentation and detector technologies',
+    'about.area.hpc.title': 'High-performance computing simulation environments',
     'about.platform.eyebrow': 'Web platform',
     'about.platform.title': 'Simulation and visualization',
     'about.platform.text': 'The platform integrates site geophysical conditions, computational models and web visualization to generate and analyze atmospheric muon spectra.',
@@ -297,7 +309,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'sim.status.simulationError': 'Não foi possível concluir a simulação (backend indisponível ou erro).',
 
     'about.title': 'Sobre nós',
-    'about.subtitle': 'Esta plataforma foi desenvolvida como projeto de graduação em Engenharia de Sistemas, voltado ao estudo, simulação e visualização do fluxo de múons atmosféricos sob diferentes condições geográficas e geomagnéticas.',
+    'about.subtitle':  'Laboratório interdisciplinar para o desenvolvimento de detectores de astropartículas',
 
     'about.lidera.eyebrow': 'Laboratório',
     'about.lidera.text1': 'O Laboratório de Pesquisa em Radiação e Astropartículas desenvolve atividades acadêmicas e científicas relacionadas a raios cósmicos, radiação atmosférica, detectores de partículas e ferramentas computacionais aplicadas a fenômenos astroparticulares.',
@@ -312,7 +324,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.eyebrow': 'Contato',
     'about.contact.title': 'Informações de contato',
     'about.contact.locationLabel': 'Localização',
-    'about.contact.locationValue': 'Universidad Industrial de Santander, Bucaramanga, Santander, Colômbia.',
+    'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'E-mails',
     'about.contact.githubLabel': 'GitHub do projeto',
     'about.contact.authorsLabel': 'Autores principais',
@@ -321,6 +333,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.cyted.text': 'O CYTED promove a cooperação científica, tecnológica e de inovação entre países ibero-americanos por meio de redes acadêmicas e projetos conjuntos voltados ao desenvolvimento regional.',
     'about.lago.text': 'A colaboração LAGO é uma rede latino-americana de detectores Cherenkov de água distribuídos em locais com diferentes altitudes e latitudes, dedicada ao estudo de raios cósmicos, clima espacial e radiação atmosférica ao nível do solo.',
 
+    'about.area.placeholder': 'Parágrafo a definir',
+    'about.area.spaceWeather.title': 'Clima espacial',
+    'about.area.muography.title': 'Muografia',
+    'about.area.soilMoisture.title': 'Umidade do solo',
+    'about.area.instrumentation.title': 'Instrumentação e tecnologias de detecção',
+    'about.area.hpc.title': 'Ambientes de simulação de alto desempenho',
     'about.platform.eyebrow': 'Plataforma web',
     'about.platform.title': 'Simulação e visualização',
     'about.platform.text': 'A plataforma integra condições geofísicas do local, modelos computacionais e visualização web para gerar e analisar espectros de múons atmosféricos.',
@@ -410,7 +428,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'sim.status.simulationError': 'La simulation n’a pas pu être complétée (backend indisponible ou erreur).',
 
     'about.title': 'À propos de nous',
-    'about.subtitle': 'Cette plateforme a été développée comme projet de fin d’études de premier cycle en ingénierie des systèmes, consacré à l’étude, à la simulation et à la visualisation du flux de muons atmosphériques sous différentes conditions géographiques et géomagnétiques.',
+    'about.subtitle': 'Laboratoire interdisciplinaire pour le développement de détecteurs d’astroparticules',
 
     'about.lidera.eyebrow': 'Laboratoire',
     'about.lidera.text1': 'Le Laboratoire de recherche en radiation et astroparticules développe des activités académiques et scientifiques liées aux rayons cosmiques, à la radiation atmosphérique, aux détecteurs de particules et aux outils computationnels appliqués aux phénomènes astroparticulaires.',
@@ -425,7 +443,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.eyebrow': 'Contact',
     'about.contact.title': 'Informations de contact',
     'about.contact.locationLabel': 'Localisation',
-    'about.contact.locationValue': 'Universidad Industrial de Santander, Bucaramanga, Santander, Colombie.',
+    'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'E-mails',
     'about.contact.githubLabel': 'GitHub du projet',
     'about.contact.authorsLabel': 'Auteurs principaux',
@@ -434,6 +452,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.cyted.text': 'CYTED favorise la coopération scientifique, technologique et d’innovation entre les pays ibéro-américains au moyen de réseaux académiques et de projets conjoints orientés vers le développement régional.',
     'about.lago.text': 'La collaboration LAGO est un réseau latino-américain de détecteurs Cherenkov à eau répartis sur des sites de différentes altitudes et latitudes, consacré à l’étude des rayons cosmiques, de la météorologie spatiale et de la radiation atmosphérique au niveau du sol.',
 
+    'about.area.placeholder': 'Paragraphe à définir',
+    'about.area.spaceWeather.title': 'Météorologie spatiale',
+    'about.area.muography.title': 'Muographie',
+    'about.area.soilMoisture.title': 'Humidité du sol',
+    'about.area.instrumentation.title': 'Instrumentation et technologies de détection',
+    'about.area.hpc.title': 'Environnements de simulation haute performance',
     'about.platform.eyebrow': 'Plateforme web',
     'about.platform.title': 'Simulation et visualisation',
     'about.platform.text': 'La plateforme intègre les conditions géophysiques du site, des modèles computationnels et une visualisation web pour générer et analyser des spectres de muons atmosphériques.',

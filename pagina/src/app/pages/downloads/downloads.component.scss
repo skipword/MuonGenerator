@@ -310,3 +310,63 @@
 .contact-item__value--authors {
   line-height: 1.75;
 }
+
+.highlight-list--areas {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.highlight-list--areas .highlight-item {
+  min-height: 130px;
+}
+
+.highlight-list--areas .highlight-item:last-child {
+  grid-column: 1 / -1;
+  max-width: 370px;
+  width: 100%;
+  justify-self: center;
+}
+
+.contact-authors {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contact-author {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.contact-author__name {
+  color: #f8fafc;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.contact-author a {
+  color: #cbd5e1;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  text-decoration: none;
+  word-break: break-word;
+  border-bottom: 1px solid transparent;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.contact-author a:hover {
+  color: #c7d2fe;
+  border-color: #c7d2fe;
+}
+
+
+@media (max-width: 760px) {
+  .highlight-list--areas {
+    grid-template-columns: 1fr;
+  }
+}
