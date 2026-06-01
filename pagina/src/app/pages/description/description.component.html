@@ -1,47 +1,119 @@
-<section class="desc-layout">
-  <!-- Parámetros de entrada -->
-  <article class="desc-card">
-    <h1 class="desc-card__title">{{ i18n.t('desc.inputParams') }}</h1>
+<section class="description-layout">
+  <article class="description-hero">
+    <div class="description-hero__content">
+      <h1 class="description-hero__title">
+        {{ i18n.t('desc.heroTitle') }}
+      </h1>
 
-    <div class="desc-block">
-      <h2 class="desc-block__subtitle">
-        B<sub>x</sub> {{ i18n.t('common.and') }} B<sub>z</sub>
+      <div class="description-chips" aria-label="Project keywords">
+        <span>CNF</span>
+        <span>ARTI/CORSIKA</span>
+        <span>{{ i18n.t('desc.chipMuonFlux') }}</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="description-card description-card--summary">
+    <p class="description-card__eyebrow">
+      {{ i18n.t('desc.summaryEyebrow') }}
+    </p>
+
+    <h2 class="description-card__title">
+      {{ i18n.t('desc.summaryTitle') }}
+    </h2>
+
+    <p class="description-card__text">
+      {{ i18n.t('desc.summaryText') }}
+    </p>
+  </article>
+
+  <section class="description-grid description-grid--technical">
+    <article class="description-card">
+      <p class="description-card__eyebrow">
+        {{ i18n.t('desc.referenceEyebrow') }}
+      </p>
+
+      <h2 class="description-card__title">
+        {{ i18n.t('desc.referenceTitle') }}
       </h2>
-      <p class="desc-block__text">
-        {{ i18n.t('desc.fieldText.before') }}
-        B<sub>x</sub>
-        {{ i18n.t('desc.fieldText.middle') }}
-        B<sub>z</sub>
-        {{ i18n.t('desc.fieldText.after') }}
-      </p>
-    </div>
 
-    <div class="desc-block">
-      <h2 class="desc-block__subtitle">{{ i18n.t('desc.heightTitle') }}</h2>
-      <p class="desc-block__text">
-        {{ i18n.t('desc.heightText') }}
+      <p class="description-card__text">
+        {{ i18n.t('desc.referenceText') }}
       </p>
-    </div>
-  </article>
+    </article>
 
-  <!-- Resultados generados -->
-  <article class="desc-card">
-    <h1 class="desc-card__title">{{ i18n.t('desc.results') }}</h1>
-
-    <div class="desc-block">
-      <h2 class="desc-block__subtitle">{{ i18n.t('desc.energyTitle') }}</h2>
-      <p class="desc-block__text">
-        {{ i18n.t('desc.energyText.beforeLog') }}
-        (log<sub>10</sub>(E)){{ i18n.t('desc.energyText.afterLog') }}
+    <article class="description-card">
+      <p class="description-card__eyebrow">
+        {{ i18n.t('desc.modelEyebrow') }}
       </p>
-    </div>
 
-    <div class="desc-block">
-      <h2 class="desc-block__subtitle">{{ i18n.t('desc.angleTitle') }}</h2>
-      <p class="desc-block__text">
-        {{ i18n.t('desc.angleText.beforeTheta') }}
-        (θ){{ i18n.t('desc.angleText.afterTheta') }}
+      <h2 class="description-card__title">
+        {{ i18n.t('desc.modelTitle') }}
+      </h2>
+
+      <p class="description-card__text">
+        {{ i18n.t('desc.modelText') }}
       </p>
-    </div>
-  </article>
+    </article>
+  </section>
+
+  <section class="description-grid description-grid--details">
+    <article class="description-card">
+      <p class="description-card__eyebrow">
+        {{ i18n.t('desc.inputParams') }}
+      </p>
+
+      <h2 class="description-card__title">
+        {{ i18n.t('desc.siteConditionsTitle') }}
+      </h2>
+
+      <div class="description-list">
+        <div class="description-list__item">
+          <h3>{{ i18n.t('desc.heightTitle') }}</h3>
+          <p>{{ i18n.t('desc.heightText') }}</p>
+        </div>
+
+        <div class="description-list__item">
+          <h3>
+            B<sub>x</sub> {{ i18n.t('common.and') }} B<sub>z</sub>
+          </h3>
+          <p>
+            {{ i18n.t('desc.fieldText.beforeBx') }}
+            B<sub>x</sub>
+            {{ i18n.t('common.and') }}
+            B<sub>z</sub>
+            {{ i18n.t('desc.fieldText.afterBz') }}
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <article class="description-card">
+      <p class="description-card__eyebrow">
+        {{ i18n.t('desc.spectraEyebrow') }}
+      </p>
+
+      <h2 class="description-card__title">
+        {{ i18n.t('desc.spectraTitle') }}
+      </h2>
+
+      <div class="description-list">
+        <div class="description-list__item">
+          <h3>{{ i18n.t('desc.energyTitle') }}</h3>
+          <p>
+            {{ i18n.t('desc.energyText.beforeLog') }}
+          </p>
+        </div>
+
+        <div class="description-list__item">
+          <h3>{{ i18n.t('desc.angleTitle') }}</h3>
+          <p>
+            {{ i18n.t('desc.angleText.beforeTheta') }}
+            θ
+            {{ i18n.t('desc.angleText.afterTheta') }}
+          </p>
+        </div>
+      </div>
+    </article>
+  </section>
 </section>

@@ -42,8 +42,8 @@ export class LanguageService {
       }
     }
 
-    this.setDocumentLanguage('es');
-    return 'es';
+    this.setDocumentLanguage('en');
+    return 'en';
   }
 
   private setDocumentLanguage(language: Language): void {

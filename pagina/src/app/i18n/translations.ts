@@ -88,7 +88,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.locationLabel': 'Ubicación',
     'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'Correos',
-    'about.contact.githubLabel': 'GitHub del proyecto',
+    'about.contact.githubLabel': 'GitLab del proyecto',
     'about.contact.authorsLabel': 'Autores principales',
 
     'about.collab.eyebrow': 'Colaboración',
@@ -97,27 +97,60 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
 
     'about.area.placeholder': 'Por definir párrafo',
     'about.area.spaceWeather.title': 'Clima espacial',
+    'about.area.spaceWeather.text': 'Aplicación de técnicas de inteligencia artificial para detectar modulaciones y anomalías en el flujo de rayos cósmicos asociadas a la actividad solar.',
+
     'about.area.muography.title': 'Muografía',
+    'about.area.muography.text': 'Generación y análisis de imágenes muográficas para estudiar estructuras geológicas colombianas, como el volcán Cerro Machín, y estimar distribuciones internas de densidad.',
+
     'about.area.soilMoisture.title': 'Humedad del suelo',
+    'about.area.soilMoisture.text': 'Estimación no invasiva de la humedad del suelo a partir de neutrones atmosféricos, cuyo flujo detectable disminuye cuando aumenta el contenido de agua en el suelo.',
+
     'about.area.instrumentation.title': 'Instrumentación y tecnologías de detección',
+    'about.area.instrumentation.text': 'Diseño, construcción y caracterización de detectores para muografía, como el telescopio híbrido MuTe, que combina paneles de centelleo y técnicas de identificación de partículas.',
+
     'about.area.hpc.title': 'Entornos de simulación de alto rendimiento',
+    'about.area.hpc.text': 'Desarrollo y uso de marcos de simulación como ARTI y MEIGA para modelar cascadas atmosféricas, propagación de muones, respuesta de detectores y aplicaciones de muografía en condiciones geográficas reales.',
+
     'about.platform.eyebrow': 'Plataforma web',
     'about.platform.title': 'Simulación y visualización',
     'about.platform.text': 'La plataforma integra condiciones geofísicas del sitio, modelos computacionales y visualización web para generar y analizar espectros de muones atmosféricos.',
 
+    'desc.heroTitle': 'Generación rápida de espectros energéticos y angulares de muones atmosféricos',
+    'desc.heroText': 'Modelo generativo condicionado por parámetros geográficos y geomagnéticos del sitio.',
+
+    'desc.chipMuonFlux': 'Flujo de muones',
+
+    'desc.summaryEyebrow': 'Contexto',
+    'desc.summaryTitle': 'Aplicación en muografía volcánica',
+    'desc.summaryText': 'El proyecto surge como apoyo al estudio de muografía en Colombia, en el contexto del proyecto MuTe aplicado al volcán Cerro Machín.',
+
+    'desc.referenceEyebrow': 'Referencia física',
+    'desc.referenceTitle': 'ARTI/CORSIKA',
+    'desc.referenceText': 'Los resultados tienen validez con las simulaciones ARTI/CORSIKA, usadas para describir la componente muónica atmosférica bajo diferentes condiciones geofísicas.',
+
+    'desc.modelEyebrow': 'Modelo de IA',
+    'desc.modelTitle': 'Conditional Normalizing Flow',
+    'desc.modelText': 'Los datos se generan a partir de un modelo de IA comúnmente utilizado para inferir distribuciones complejas.',
+
     'desc.inputParams': 'Parámetros de entrada',
-    'desc.fieldText.before': 'Componentes del campo magnético terrestre en el sitio de observación.',
-    'desc.fieldText.middle': 'es la componente horizontal y',
-    'desc.fieldText.after': 'la componente vertical.',
+    'desc.siteConditionsTitle': 'Condiciones del sitio',
+
     'desc.heightTitle': 'Altura sobre el nivel del mar',
-    'desc.heightText': 'La altitud afecta significativamente la distribución de muones debido a la menor cantidad de atmósfera que las partículas deben atravesar a mayores alturas.',
-    'desc.results': 'Resultados generados',
-    'desc.energyTitle': 'Distribución de energía',
-    'desc.energyText.beforeLog': 'Representa el espectro de energía de los muones en escala logarítmica',
-    'desc.energyText.afterLog': '. Permite analizar la contribución de diferentes rangos de energía.',
-    'desc.angleTitle': 'Distribución del ángulo',
-    'desc.angleText.beforeTheta': 'Muestra cómo varía la intensidad de muones en función del ángulo cenital',
-    'desc.angleText.afterTheta': '.'
+    'desc.heightText': 'La altitud modifica el flujo de muones atmosféricos debido a los cambios en la cantidad de atmósfera atravesada por las partículas.',
+
+    'desc.fieldText.beforeBx': 'Componentes del campo geomagnético usadas para condicionar el modelo.',
+    'desc.fieldText.between': 'y',
+    'desc.fieldText.afterBz': 'representan la variación local del campo magnético terrestre.',
+
+    'desc.spectraEyebrow': 'Espectros',
+    'desc.spectraTitle': 'Representaciones generadas',
+
+    'desc.energyTitle': 'Espectro energético',
+    'desc.energyText.beforeLog': 'Representa la distribución de energía de los muones.',
+
+    'desc.angleTitle': 'Espectro angular',
+    'desc.angleText.beforeTheta': 'Representa la distribución de muones en función del ángulo cenital',
+    'desc.angleText.afterTheta': '.',
   },
 
   en: {
@@ -207,7 +240,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.locationLabel': 'Location',
     'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'Emails',
-    'about.contact.githubLabel': 'Project GitHub',
+    'about.contact.githubLabel': 'Project GitLab',
     'about.contact.authorsLabel': 'Main authors',
 
     'about.collab.eyebrow': 'Collaboration',
@@ -220,6 +253,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.area.soilMoisture.title': 'Soil Moisture',
     'about.area.instrumentation.title': 'Instrumentation and detector technologies',
     'about.area.hpc.title': 'High-performance computing simulation environments',
+    'about.area.spaceWeather.text': 'Application of artificial intelligence techniques to detect modulations and anomalies in the cosmic-ray flux associated with solar activity.',
+    'about.area.muography.text': 'Generation and analysis of muographic images to study Colombian geological structures, such as the Cerro Machín volcano, and estimate internal density distributions.',
+    'about.area.soilMoisture.text': 'Non-invasive estimation of soil moisture from atmospheric neutrons, whose detectable flux decreases as the water content in the soil increases.',
+    'about.area.instrumentation.text': 'Design, construction and characterization of detectors for muography, such as the MuTe hybrid telescope, which combines scintillator panels and particle identification techniques.',
+    'about.area.hpc.text': 'Development and use of simulation frameworks such as ARTI and MEIGA to model atmospheric showers, muon propagation, detector response and muography applications under real geographic conditions.',
+
     'about.platform.eyebrow': 'Web platform',
     'about.platform.title': 'Simulation and visualization',
     'about.platform.text': 'The platform integrates site geophysical conditions, computational models and web visualization to generate and analyze atmospheric muon spectra.',
@@ -326,7 +365,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.locationLabel': 'Localização',
     'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'E-mails',
-    'about.contact.githubLabel': 'GitHub do projeto',
+    'about.contact.githubLabel': 'GitLab do projeto',
     'about.contact.authorsLabel': 'Autores principais',
 
     'about.collab.eyebrow': 'Colaboração',
@@ -339,6 +378,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.area.soilMoisture.title': 'Umidade do solo',
     'about.area.instrumentation.title': 'Instrumentação e tecnologias de detecção',
     'about.area.hpc.title': 'Ambientes de simulação de alto desempenho',
+    'about.area.spaceWeather.text': 'Aplicação de técnicas de inteligência artificial para detectar modulações e anomalias no fluxo de raios cósmicos associadas à atividade solar.',
+    'about.area.muography.text': 'Geração e análise de imagens muográficas para estudar estruturas geológicas colombianas, como o vulcão Cerro Machín, e estimar distribuições internas de densidade.',
+    'about.area.soilMoisture.text': 'Estimativa não invasiva da umidade do solo a partir de nêutrons atmosféricos, cujo fluxo detectável diminui à medida que aumenta o conteúdo de água no solo.',
+    'about.area.instrumentation.text': 'Projeto, construção e caracterização de detectores para muografia, como o telescópio híbrido MuTe, que combina painéis de cintilação e técnicas de identificação de partículas.',
+    'about.area.hpc.text': 'Desenvolvimento e uso de frameworks de simulação como ARTI e MEIGA para modelar cascatas atmosféricas, propagação de múons, resposta de detectores e aplicações de muografia em condições geográficas reais.',
+
     'about.platform.eyebrow': 'Plataforma web',
     'about.platform.title': 'Simulação e visualização',
     'about.platform.text': 'A plataforma integra condições geofísicas do local, modelos computacionais e visualização web para gerar e analisar espectros de múons atmosféricos.',
@@ -445,7 +490,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.locationLabel': 'Localisation',
     'about.contact.locationValue': 'Universidad Industrial de Santander, Universidad Autónoma de Bucaramanga, Santander, Colombia.',
     'about.contact.emailLabel': 'E-mails',
-    'about.contact.githubLabel': 'GitHub du projet',
+    'about.contact.githubLabel': 'GitLab du projet',
     'about.contact.authorsLabel': 'Auteurs principaux',
 
     'about.collab.eyebrow': 'Collaboration',
@@ -458,6 +503,12 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.area.soilMoisture.title': 'Humidité du sol',
     'about.area.instrumentation.title': 'Instrumentation et technologies de détection',
     'about.area.hpc.title': 'Environnements de simulation haute performance',
+    'about.area.spaceWeather.text': 'Application de techniques d’intelligence artificielle pour détecter les modulations et les anomalies du flux de rayons cosmiques associées à l’activité solaire.',
+    'about.area.muography.text': 'Génération et analyse d’images muographiques pour étudier des structures géologiques colombiennes, comme le volcan Cerro Machín, et estimer les distributions internes de densité.',
+    'about.area.soilMoisture.text': 'Estimation non invasive de l’humidité du sol à partir des neutrons atmosphériques, dont le flux détectable diminue lorsque la teneur en eau du sol augmente.',
+    'about.area.instrumentation.text': 'Conception, construction et caractérisation de détecteurs pour la muographie, comme le télescope hybride MuTe, qui combine des panneaux scintillateurs et des techniques d’identification de particules.',
+    'about.area.hpc.text': 'Développement et utilisation de frameworks de simulation comme ARTI et MEIGA pour modéliser les gerbes atmosphériques, la propagation des muons, la réponse des détecteurs et les applications de muographie dans des conditions géographiques réelles.',
+
     'about.platform.eyebrow': 'Plateforme web',
     'about.platform.title': 'Simulation et visualisation',
     'about.platform.text': 'La plateforme intègre les conditions géophysiques du site, des modèles computationnels et une visualisation web pour générer et analyser des spectres de muons atmosphériques.',
