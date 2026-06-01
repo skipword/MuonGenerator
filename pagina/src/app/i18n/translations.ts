@@ -92,7 +92,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.authorsLabel': 'Autores principales',
 
     'about.collab.eyebrow': 'Colaboración',
-    'about.cyted.text': 'CYTED promueve la cooperación científica, tecnológica y de innovación entre países iberoamericanos mediante redes académicas y proyectos conjuntos orientados al desarrollo regional.',
+    'about.cyted.text': 'LAGO CYTED promueve la cooperación científica, tecnológica y de innovación entre países iberoamericanos mediante redes académicas y proyectos conjuntos orientados al desarrollo regional.',
     'about.lago.text': 'La colaboración LAGO es una red latinoamericana de detectores Cherenkov de agua distribuidos en sitios con diferentes altitudes y latitudes, dedicada al estudio de rayos cósmicos, clima espacial y radiación atmosférica a nivel del suelo.',
 
     'about.area.placeholder': 'Por definir párrafo',
@@ -243,7 +243,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.authorsLabel': 'Main authors',
 
     'about.collab.eyebrow': 'Collaboration',
-    'about.cyted.text': 'CYTED promotes scientific, technological and innovation cooperation among Ibero-American countries through academic networks and joint projects aimed at regional development.',
+    'about.cyted.text': 'LAGO CYTED promotes scientific, technological and innovation cooperation among Ibero-American countries through academic networks and joint projects aimed at regional development.',
     'about.lago.text': 'The LAGO Collaboration is a Latin American network of water Cherenkov detectors distributed across sites with different altitudes and latitudes, dedicated to the study of cosmic rays, space weather and atmospheric radiation at ground level.',
 
     'about.area.placeholder': 'Paragraph to be defined',
@@ -390,7 +390,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.authorsLabel': 'Autores principais',
 
     'about.collab.eyebrow': 'Colaboração',
-    'about.cyted.text': 'O CYTED promove a cooperação científica, tecnológica e de inovação entre países ibero-americanos por meio de redes acadêmicas e projetos conjuntos voltados ao desenvolvimento regional.',
+    'about.cyted.text': 'O LAGO CYTED promove a cooperação científica, tecnológica e de inovação entre países ibero-americanos por meio de redes acadêmicas e projetos conjuntos voltados ao desenvolvimento regional.',
     'about.lago.text': 'A colaboração LAGO é uma rede latino-americana de detectores Cherenkov de água distribuídos em locais com diferentes altitudes e latitudes, dedicada ao estudo de raios cósmicos, clima espacial e radiação atmosférica ao nível do solo.',
 
     'about.area.placeholder': 'Parágrafo a definir',
@@ -537,7 +537,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.contact.authorsLabel': 'Auteurs principaux',
 
     'about.collab.eyebrow': 'Collaboration',
-    'about.cyted.text': 'CYTED favorise la coopération scientifique, technologique et d’innovation entre les pays ibéro-américains au moyen de réseaux académiques et de projets conjoints orientés vers le développement régional.',
+    'about.cyted.text': 'LAGO CYTED favorise la coopération scientifique, technologique et d’innovation entre les pays ibéro-américains au moyen de réseaux académiques et de projets conjoints orientés vers le développement régional.',
     'about.lago.text': 'La collaboration LAGO est un réseau latino-américain de détecteurs Cherenkov à eau répartis sur des sites de différentes altitudes et latitudes, consacré à l’étude des rayons cosmiques, de la météorologie spatiale et de la radiation atmosphérique au niveau du sol.',
 
     'about.area.placeholder': 'Paragraphe à définir',
