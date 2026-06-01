@@ -100,8 +100,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.area.spaceWeather.text': 'Aplicación de técnicas de inteligencia artificial para detectar modulaciones y anomalías en el flujo de rayos cósmicos asociadas a la actividad solar.',
 
     'about.area.muography.title': 'Muografía',
-    'about.area.muography.text': 'Generación y análisis de imágenes muográficas para estudiar estructuras geológicas colombianas, como el volcán Cerro Machín, y estimar distribuciones internas de densidad.',
-
+    'about.area.muography.text': 'Generación y análisis de imágenes muográficas para estudiar estructuras grandes, tanto industriales como geológicas, y estimar distribuciones internas de densidad.',
     'about.area.soilMoisture.title': 'Humedad del suelo',
     'about.area.soilMoisture.text': 'Estimación no invasiva de la humedad del suelo a partir de neutrones atmosféricos, cuyo flujo detectable disminuye cuando aumenta el contenido de agua en el suelo.',
 
@@ -146,7 +145,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'desc.spectraTitle': 'Representaciones generadas',
 
     'desc.energyTitle': 'Espectro energético',
-    'desc.energyText.beforeLog': 'Representa la distribución de energía de los muones.',
+    'desc.energyText': 'Representa la distribución de energía de los muones.',
 
     'desc.angleTitle': 'Espectro angular',
     'desc.angleText.beforeTheta': 'Representa la distribución de muones en función del ángulo cenital',
@@ -254,8 +253,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.area.instrumentation.title': 'Instrumentation and detector technologies',
     'about.area.hpc.title': 'High-performance computing simulation environments',
     'about.area.spaceWeather.text': 'Application of artificial intelligence techniques to detect modulations and anomalies in the cosmic-ray flux associated with solar activity.',
-    'about.area.muography.text': 'Generation and analysis of muographic images to study Colombian geological structures, such as the Cerro Machín volcano, and estimate internal density distributions.',
-    'about.area.soilMoisture.text': 'Non-invasive estimation of soil moisture from atmospheric neutrons, whose detectable flux decreases as the water content in the soil increases.',
+    'about.area.muography.text': 'Generation and analysis of muographic images to study large structures, both industrial and geological, and estimate internal density distributions.',    'about.area.soilMoisture.text': 'Non-invasive estimation of soil moisture from atmospheric neutrons, whose detectable flux decreases as the water content in the soil increases.',
     'about.area.instrumentation.text': 'Design, construction and characterization of detectors for muography, such as the MuTe hybrid telescope, which combines scintillator panels and particle identification techniques.',
     'about.area.hpc.text': 'Development and use of simulation frameworks such as ARTI and MEIGA to model atmospheric showers, muon propagation, detector response and muography applications under real geographic conditions.',
 
@@ -263,19 +261,42 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.platform.title': 'Simulation and visualization',
     'about.platform.text': 'The platform integrates site geophysical conditions, computational models and web visualization to generate and analyze atmospheric muon spectra.',
 
+    'desc.heroTitle': 'Fast generation of atmospheric muon energy and angular spectra',
+    'desc.heroText': 'Generative model conditioned by geographic and geomagnetic site parameters.',
+
+    'desc.chipMuonFlux': 'Muon flux',
+
+    'desc.summaryEyebrow': 'Context',
+    'desc.summaryTitle': 'Application in volcanic muography',
+    'desc.summaryText': 'The project was developed to support muography studies in Colombia, in the context of the MuTe project applied to the Cerro Machín volcano.',
+
+    'desc.referenceEyebrow': 'Physical reference',
+    'desc.referenceTitle': 'ARTI/CORSIKA',
+    'desc.referenceText': 'The results are validated with ARTI/CORSIKA simulations, used to describe the atmospheric muon component under different geophysical conditions.',
+
+    'desc.modelEyebrow': 'AI model',
+    'desc.modelTitle': 'Conditional Normalizing Flow',
+    'desc.modelText': 'The data are generated from an AI model commonly used to infer complex distributions.',
+
     'desc.inputParams': 'Input parameters',
-    'desc.fieldText.before': 'Components of the Earth’s magnetic field at the observation site.',
-    'desc.fieldText.middle': 'is the horizontal component and',
-    'desc.fieldText.after': 'is the vertical component.',
+    'desc.siteConditionsTitle': 'Site conditions',
+
     'desc.heightTitle': 'Height above sea level',
-    'desc.heightText': 'Altitude significantly affects the muon distribution because particles cross less atmosphere at higher elevations.',
-    'desc.results': 'Generated results',
-    'desc.energyTitle': 'Energy distribution',
-    'desc.energyText.beforeLog': 'Represents the muon energy spectrum on a logarithmic scale',
-    'desc.energyText.afterLog': '. It allows the contribution of different energy ranges to be analyzed.',
-    'desc.angleTitle': 'Angular distribution',
-    'desc.angleText.beforeTheta': 'Shows how muon intensity varies as a function of the zenith angle',
-    'desc.angleText.afterTheta': '.'
+    'desc.heightText': 'Altitude modifies the atmospheric muon flux due to changes in the amount of atmosphere crossed by the particles.',
+
+    'desc.fieldText.beforeBx': 'Geomagnetic field components used to condition the model.',
+    'desc.fieldText.between': 'and',
+    'desc.fieldText.afterBz': 'represent the local variation of the Earth’s magnetic field.',
+
+    'desc.spectraEyebrow': 'Spectra',
+    'desc.spectraTitle': 'Generated representations',
+
+    'desc.energyTitle': 'Energy spectrum',
+    'desc.energyText': 'Represents the energy distribution of muons.',
+
+    'desc.angleTitle': 'Angular spectrum',
+    'desc.angleText.beforeTheta': 'Represents the muon distribution as a function of the zenith angle',
+    'desc.angleText.afterTheta': '.',
   },
 
   pt: {
@@ -379,8 +400,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.area.instrumentation.title': 'Instrumentação e tecnologias de detecção',
     'about.area.hpc.title': 'Ambientes de simulação de alto desempenho',
     'about.area.spaceWeather.text': 'Aplicação de técnicas de inteligência artificial para detectar modulações e anomalias no fluxo de raios cósmicos associadas à atividade solar.',
-    'about.area.muography.text': 'Geração e análise de imagens muográficas para estudar estruturas geológicas colombianas, como o vulcão Cerro Machín, e estimar distribuições internas de densidade.',
-    'about.area.soilMoisture.text': 'Estimativa não invasiva da umidade do solo a partir de nêutrons atmosféricos, cujo fluxo detectável diminui à medida que aumenta o conteúdo de água no solo.',
+    'about.area.muography.text': 'Geração e análise de imagens muográficas para estudar grandes estruturas, tanto industriais quanto geológicas, e estimar distribuições internas de densidade.',    'about.area.soilMoisture.text': 'Estimativa não invasiva da umidade do solo a partir de nêutrons atmosféricos, cujo fluxo detectável diminui à medida que aumenta o conteúdo de água no solo.',
     'about.area.instrumentation.text': 'Projeto, construção e caracterização de detectores para muografia, como o telescópio híbrido MuTe, que combina painéis de cintilação e técnicas de identificação de partículas.',
     'about.area.hpc.text': 'Desenvolvimento e uso de frameworks de simulação como ARTI e MEIGA para modelar cascatas atmosféricas, propagação de múons, resposta de detectores e aplicações de muografia em condições geográficas reais.',
 
@@ -388,19 +408,42 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.platform.title': 'Simulação e visualização',
     'about.platform.text': 'A plataforma integra condições geofísicas do local, modelos computacionais e visualização web para gerar e analisar espectros de múons atmosféricos.',
 
+    'desc.heroTitle': 'Geração rápida de espectros energéticos e angulares de múons atmosféricos',
+    'desc.heroText': 'Modelo generativo condicionado por parâmetros geográficos e geomagnéticos do local.',
+
+    'desc.chipMuonFlux': 'Fluxo de múons',
+
+    'desc.summaryEyebrow': 'Contexto',
+    'desc.summaryTitle': 'Aplicação em muografia vulcânica',
+    'desc.summaryText': 'O projeto surge como apoio ao estudo da muografia na Colômbia, no contexto do projeto MuTe aplicado ao vulcão Cerro Machín.',
+
+    'desc.referenceEyebrow': 'Referência física',
+    'desc.referenceTitle': 'ARTI/CORSIKA',
+    'desc.referenceText': 'Os resultados são validados com simulações ARTI/CORSIKA, usadas para descrever a componente muônica atmosférica sob diferentes condições geofísicas.',
+
+    'desc.modelEyebrow': 'Modelo de IA',
+    'desc.modelTitle': 'Conditional Normalizing Flow',
+    'desc.modelText': 'Os dados são gerados a partir de um modelo de IA comumente utilizado para inferir distribuições complexas.',
+
     'desc.inputParams': 'Parâmetros de entrada',
-    'desc.fieldText.before': 'Componentes do campo magnético terrestre no local de observação.',
-    'desc.fieldText.middle': 'é a componente horizontal e',
-    'desc.fieldText.after': 'é a componente vertical.',
+    'desc.siteConditionsTitle': 'Condições do local',
+
     'desc.heightTitle': 'Altura acima do nível do mar',
-    'desc.heightText': 'A altitude afeta significativamente a distribuição de múons, pois as partículas atravessam uma menor quantidade de atmosfera em maiores altitudes.',
-    'desc.results': 'Resultados gerados',
-    'desc.energyTitle': 'Distribuição de energia',
-    'desc.energyText.beforeLog': 'Representa o espectro de energia dos múons em escala logarítmica',
-    'desc.energyText.afterLog': '. Permite analisar a contribuição de diferentes faixas de energia.',
-    'desc.angleTitle': 'Distribuição angular',
-    'desc.angleText.beforeTheta': 'Mostra como a intensidade de múons varia em função do ângulo zenital',
-    'desc.angleText.afterTheta': '.'
+    'desc.heightText': 'A altitude modifica o fluxo de múons atmosféricos devido às mudanças na quantidade de atmosfera atravessada pelas partículas.',
+
+    'desc.fieldText.beforeBx': 'Componentes do campo geomagnético usadas para condicionar o modelo.',
+    'desc.fieldText.between': 'e',
+    'desc.fieldText.afterBz': 'representam a variação local do campo magnético terrestre.',
+
+    'desc.spectraEyebrow': 'Espectros',
+    'desc.spectraTitle': 'Representações geradas',
+
+    'desc.energyTitle': 'Espectro energético',
+    'desc.energyText': 'Representa a distribuição de energia dos múons.',
+
+    'desc.angleTitle': 'Espectro angular',
+    'desc.angleText.beforeTheta': 'Representa a distribuição de múons em função do ângulo zenital',
+    'desc.angleText.afterTheta': '.',
   },
 
   fr: {
@@ -504,8 +547,7 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.area.instrumentation.title': 'Instrumentation et technologies de détection',
     'about.area.hpc.title': 'Environnements de simulation haute performance',
     'about.area.spaceWeather.text': 'Application de techniques d’intelligence artificielle pour détecter les modulations et les anomalies du flux de rayons cosmiques associées à l’activité solaire.',
-    'about.area.muography.text': 'Génération et analyse d’images muographiques pour étudier des structures géologiques colombiennes, comme le volcan Cerro Machín, et estimer les distributions internes de densité.',
-    'about.area.soilMoisture.text': 'Estimation non invasive de l’humidité du sol à partir des neutrons atmosphériques, dont le flux détectable diminue lorsque la teneur en eau du sol augmente.',
+    'about.area.muography.text': 'Génération et analyse d’images muographiques pour étudier de grandes structures, à la fois industrielles et géologiques, et estimer les distributions internes de densité.',    'about.area.soilMoisture.text': 'Estimation non invasive de l’humidité du sol à partir des neutrons atmosphériques, dont le flux détectable diminue lorsque la teneur en eau du sol augmente.',
     'about.area.instrumentation.text': 'Conception, construction et caractérisation de détecteurs pour la muographie, comme le télescope hybride MuTe, qui combine des panneaux scintillateurs et des techniques d’identification de particules.',
     'about.area.hpc.text': 'Développement et utilisation de frameworks de simulation comme ARTI et MEIGA pour modéliser les gerbes atmosphériques, la propagation des muons, la réponse des détecteurs et les applications de muographie dans des conditions géographiques réelles.',
 
@@ -513,18 +555,41 @@ export const TRANSLATIONS: Record<Language, Record<string, string>> = {
     'about.platform.title': 'Simulation et visualisation',
     'about.platform.text': 'La plateforme intègre les conditions géophysiques du site, des modèles computationnels et une visualisation web pour générer et analyser des spectres de muons atmosphériques.',
 
+    'desc.heroTitle': 'Génération rapide de spectres énergétiques et angulaires de muons atmosphériques',
+    'desc.heroText': 'Modèle génératif conditionné par les paramètres géographiques et géomagnétiques du site.',
+
+    'desc.chipMuonFlux': 'Flux de muons',
+
+    'desc.summaryEyebrow': 'Contexte',
+    'desc.summaryTitle': 'Application à la muographie volcanique',
+    'desc.summaryText': 'Le projet a été développé pour soutenir les études de muographie en Colombie, dans le contexte du projet MuTe appliqué au volcan Cerro Machín.',
+
+    'desc.referenceEyebrow': 'Référence physique',
+    'desc.referenceTitle': 'ARTI/CORSIKA',
+    'desc.referenceText': 'Les résultats sont validés avec des simulations ARTI/CORSIKA, utilisées pour décrire la composante muonique atmosphérique sous différentes conditions géophysiques.',
+
+    'desc.modelEyebrow': 'Modèle d’IA',
+    'desc.modelTitle': 'Conditional Normalizing Flow',
+    'desc.modelText': 'Les données sont générées à partir d’un modèle d’IA couramment utilisé pour inférer des distributions complexes.',
+
     'desc.inputParams': 'Paramètres d’entrée',
-    'desc.fieldText.before': 'Composantes du champ magnétique terrestre sur le site d’observation.',
-    'desc.fieldText.middle': 'est la composante horizontale et',
-    'desc.fieldText.after': 'est la composante verticale.',
+    'desc.siteConditionsTitle': 'Conditions du site',
+
     'desc.heightTitle': 'Altitude au-dessus du niveau de la mer',
-    'desc.heightText': 'L’altitude affecte significativement la distribution des muons, car les particules traversent moins d’atmosphère à des altitudes plus élevées.',
-    'desc.results': 'Résultats générés',
-    'desc.energyTitle': 'Distribution d’énergie',
-    'desc.energyText.beforeLog': 'Représente le spectre d’énergie des muons sur une échelle logarithmique',
-    'desc.energyText.afterLog': '. Elle permet d’analyser la contribution de différentes plages d’énergie.',
-    'desc.angleTitle': 'Distribution angulaire',
-    'desc.angleText.beforeTheta': 'Montre comment l’intensité des muons varie en fonction de l’angle zénithal',
-    'desc.angleText.afterTheta': '.'
+    'desc.heightText': 'L’altitude modifie le flux de muons atmosphériques en raison des changements dans la quantité d’atmosphère traversée par les particules.',
+
+    'desc.fieldText.beforeBx': 'Composantes du champ géomagnétique utilisées pour conditionner le modèle.',
+    'desc.fieldText.between': 'et',
+    'desc.fieldText.afterBz': 'représentent la variation locale du champ magnétique terrestre.',
+
+    'desc.spectraEyebrow': 'Spectres',
+    'desc.spectraTitle': 'Représentations générées',
+
+    'desc.energyTitle': 'Spectre énergétique',
+    'desc.energyText': 'Représente la distribution d’énergie des muons.',
+
+    'desc.angleTitle': 'Spectre angulaire',
+    'desc.angleText.beforeTheta': 'Représente la distribution des muons en fonction de l’angle zénithal',
+    'desc.angleText.afterTheta': '.',
   }
 };
