@@ -4,7 +4,9 @@ import { BehaviorSubject, Observable, finalize } from 'rxjs';
 import {
   BFieldResponse,
   CityResolveResponse,
-  SimResponse,
+  DownloadLinkResponse,
+  SimulationStartResponse,
+  SimulationStatusResponse,
   SimulatorApiService,
 } from './simulator-api.service';
 import { LanguageService } from '../i18n/language.service';
@@ -76,9 +78,11 @@ type PersistedSimulatorState = Pick<
 })
 export class SimulatorStateService {
   private readonly STORAGE_KEY = 'simulator-state';
+  private readonly POLL_INTERVAL_MS = 5000;
 
   private readonly initialState: SimulatorState;
   private readonly stateSubject: BehaviorSubject<SimulatorState>;
+  private pollTimer: ReturnType<typeof setTimeout> | null = null;
 
   readonly state$: Observable<SimulatorState>;
 
@@ -87,8 +91,14 @@ export class SimulatorStateService {
     private readonly i18n: LanguageService
   ) {
     this.initialState = this.createInitialState();
-    this.stateSubject = new BehaviorSubject<SimulatorState>(this.loadInitialState());
+    const loadedState = this.loadInitialState();
+
+    this.stateSubject = new BehaviorSubject<SimulatorState>(loadedState);
     this.state$ = this.stateSubject.asObservable();
+
+    if (loadedState.runId && !loadedState.simulationDone) {
+      this.scheduleStatusPoll(loadedState.runId, 0);
+    }
   }
 
   get snapshot(): SimulatorState {
@@ -100,6 +110,7 @@ export class SimulatorStateService {
   }
 
   resetState(): void {
+    this.clearPolling();
     const initialState = this.createInitialState();
     this.stateSubject.next(initialState);
     this.persistState(initialState);
@@ -209,6 +220,8 @@ export class SimulatorStateService {
       lang: this.i18n.currentLanguage(),
     };
 
+    this.clearPolling();
+
     this.patchState({
       isSimulating: true,
       simulationDone: false,
@@ -223,36 +236,29 @@ export class SimulatorStateService {
       mensajeResultado: this.i18n.t('sim.status.simulationStarting'),
     });
 
-    this.simulatorApi
-      .simulateFull(payload)
-      .pipe(
-        finalize(() => {
-          this.patchState({ isSimulating: false });
-        })
-      )
-      .subscribe({
-        next: (res: SimResponse) => {
-          this.patchState({
-            simulationDone: true,
-            mensajeResultado: this.i18n.t('sim.status.simulationDone'),
-            resultImageUrls: this.addCacheBusting(res.image_urls ?? []),
-            resultImageLabels: res.image_labels ?? [],
-            downloadUrls: {
-              csv: res.download_csv_url ?? '',
-              shw: res.download_shw_url ?? '',
-            },
-            runId: res.run_id ?? '',
-            currentImageIndex: 0,
-          });
-        },
-        error: (err) => {
-          this.patchState({
-            simulationDone: false,
-            mensajeResultado:
-              err?.error?.detail ?? this.i18n.t('sim.status.simulationError'),
-          });
-        },
-      });
+    this.simulatorApi.simulateAws(payload).subscribe({
+      next: (res: SimulationStartResponse) => {
+        this.patchState({
+          runId: res.job_id,
+          isSimulating: true,
+          simulationDone: false,
+          mensajeResultado:
+            res.status === 'queued'
+              ? (res.message || 'Job en cola...')
+              : this.i18n.t('sim.running'),
+        });
+
+        this.scheduleStatusPoll(res.job_id, 1000);
+      },
+      error: (err) => {
+        this.patchState({
+          isSimulating: false,
+          simulationDone: false,
+          mensajeResultado:
+            err?.error?.detail ?? this.i18n.t('sim.status.simulationError'),
+        });
+      },
+    });
   }
 
   prevImage(): void {
@@ -285,6 +291,111 @@ export class SimulatorStateService {
     }
 
     return this.snapshot.downloadUrls[format];
+  }
+
+  download(format: DownloadFormat): void {
+    const { runId } = this.snapshot;
+
+    if (!format || !runId) {
+      return;
+    }
+
+    this.simulatorApi.getDownloadLink(runId, format).subscribe({
+      next: (res: DownloadLinkResponse) => {
+        this.patchState({
+          downloadUrls: {
+            [format]: res.url,
+          } as Partial<SimulatorState['downloadUrls']> as SimulatorState['downloadUrls'],
+        });
+
+        window.open(res.url, '_blank', 'noopener');
+      },
+      error: () => {
+        const fallback = this.getDownloadUrl(format);
+        if (fallback) {
+          window.open(fallback, '_blank', 'noopener');
+        }
+      },
+    });
+  }
+
+  private scheduleStatusPoll(jobId: string, delayMs = this.POLL_INTERVAL_MS): void {
+    this.clearPolling();
+
+    this.pollTimer = setTimeout(() => {
+      this.fetchSimulationStatus(jobId);
+    }, delayMs);
+  }
+
+  private clearPolling(): void {
+    if (this.pollTimer !== null) {
+      clearTimeout(this.pollTimer);
+      this.pollTimer = null;
+    }
+  }
+
+  private fetchSimulationStatus(jobId: string): void {
+    this.simulatorApi.getSimulationStatus(jobId).subscribe({
+      next: (res: SimulationStatusResponse) => {
+        const status = res.status;
+
+        if (status === 'completed') {
+          this.clearPolling();
+
+          this.patchState({
+            runId: jobId,
+            isSimulating: false,
+            simulationDone: true,
+            mensajeResultado: this.i18n.t('sim.status.simulationDone'),
+            resultImageUrls: this.addCacheBusting(res.image_urls ?? []),
+            resultImageLabels: res.image_labels ?? [],
+            downloadUrls: {
+              csv: res.download_urls?.csv ?? '',
+              shw: res.download_urls?.shw ?? '',
+            },
+            currentImageIndex: 0,
+          });
+
+          return;
+        }
+
+        if (status === 'failed') {
+          this.clearPolling();
+
+          this.patchState({
+            runId: jobId,
+            isSimulating: false,
+            simulationDone: false,
+            mensajeResultado:
+              res.message ?? this.i18n.t('sim.status.simulationError'),
+          });
+
+          return;
+        }
+
+        this.patchState({
+          runId: jobId,
+          isSimulating: true,
+          simulationDone: false,
+          mensajeResultado:
+            status === 'queued'
+              ? (res.message || 'Job en cola...')
+              : this.i18n.t('sim.running'),
+        });
+
+        this.scheduleStatusPoll(jobId);
+      },
+      error: () => {
+        this.patchState({
+          runId: jobId,
+          isSimulating: true,
+          simulationDone: false,
+          mensajeResultado: this.i18n.t('sim.running'),
+        });
+
+        this.scheduleStatusPoll(jobId);
+      },
+    });
   }
 
   private patchState(partial: Partial<SimulatorState>): void {
@@ -370,7 +481,7 @@ export class SimulatorStateService {
         JSON.stringify(this.toPersistedState(state))
       );
     } catch {
-      // proximamente jejeje
+      // no-op
     }
   }
 

@@ -235,14 +235,7 @@ export class SimulatorComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const url = this.simulatorState.getDownloadUrl(this.formato);
-
-    if (!url) {
-      console.error('No hay URL de descarga para:', this.formato);
-      return;
-    }
-
-    window.open(url, '_blank', 'noopener');
+    this.simulatorState.download(this.formato);
   }
 
   private measureUntilFirstImageRendered(imageUrl: string): void {

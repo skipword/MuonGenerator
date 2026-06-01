@@ -149,7 +149,7 @@
 
       <ng-container *ngIf="isSimulating">
         <div class="spinner"></div>
-        <p>{{ i18n.t('sim.running') }}</p>
+        <p>{{ mensajeResultado }}</p>
       </ng-container>
 
       <ng-container *ngIf="!isSimulating && simulationDone">

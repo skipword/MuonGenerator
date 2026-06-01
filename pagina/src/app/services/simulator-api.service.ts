@@ -38,14 +38,36 @@ export type SimFullRequest = {
   lang?: 'es' | 'en' | 'pt' | 'fr';
 };
 
-export type SimResponse = {
+export type SimulationStartResponse = {
   message: string;
-  image_urls: string[];
+  job_id: string;
+  task_arn: string | null;
+  status: 'queued' | 'running';
+  queued: boolean;
+};
+
+export type SimulationStatusResponse = {
+  job_id: string;
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'unknown';
+  message?: string;
+  updated_at?: string;
+  meta?: {
+    simulation_time_s?: number;
+    [key: string]: unknown;
+  };
+  image_urls?: string[];
   image_labels?: string[];
-  download_csv_url?: string;
-  download_shw_url?: string;
-  run_id?: string;
-  simulation_time_s?: number;
+  download_urls?: {
+    csv?: string;
+    shw?: string;
+    shw_zip?: string;
+  };
+};
+
+export type DownloadLinkResponse = {
+  job_id: string;
+  artifact: string;
+  url: string;
 };
 
 @Injectable({
@@ -72,10 +94,25 @@ export class SimulatorApiService {
     );
   }
 
-  simulateFull(payload: SimFullRequest): Observable<SimResponse> {
-    return this.http.post<SimResponse>(
-      `${this.apiBaseUrl}/simulate-full`,
+  simulateAws(payload: SimFullRequest): Observable<SimulationStartResponse> {
+    return this.http.post<SimulationStartResponse>(
+      `${this.apiBaseUrl}/simulate-aws`,
       payload
+    );
+  }
+
+  getSimulationStatus(jobId: string): Observable<SimulationStatusResponse> {
+    return this.http.get<SimulationStatusResponse>(
+      `${this.apiBaseUrl}/simulation/${jobId}`
+    );
+  }
+
+  getDownloadLink(
+    jobId: string,
+    artifact: 'csv' | 'shw'
+  ): Observable<DownloadLinkResponse> {
+    return this.http.get<DownloadLinkResponse>(
+      `${this.apiBaseUrl}/simulation/${jobId}/download?artifact=${artifact}`
     );
   }
 }
